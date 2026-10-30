@@ -2,7 +2,7 @@
 .DS_Store
 # ad-hoc tool and build logs
 *.log
-# Maven's per-module build output, so parallel worktrees never share it
+# Maven's per-module build output, so parallel checkouts never share it
 target/
 # IntelliJ workspace state
 .idea/
