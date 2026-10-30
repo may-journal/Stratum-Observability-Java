@@ -1,120 +1,37 @@
-# Contributions
-We love to hear feedback from the community and encourage developers to contribute back to Stratum with bugfixes, feature requests, and new plugins whenever possible.
+# Contributing
 
-If you are looking to contribute a new feature, we recommend first implementing it as a custom plugin if possible. If you think your plugin is useful to others, let us know! We'd love to learn more and help you make it available.
+Every change starts from an issue. A change in behavior needs an approved Plan issue, and its pull request closes that Plan.
 
-## Intake
+Contributions are licensed under the Apache License 2.0, as the rest of the project.
 
-In order to maintain Stratum, we require that all contributions (feature requests or bugs) go through an intake process via GitHub issues so that maintainers can evaluate the impacts of changes and provide guidance on the implementation.
+## Build and test
 
-### Any contributions you make will be under the Apache License 2.0
-In short, when you submit code changes, your submissions are understood to be under the same [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) that covers the project. Feel free to contact the maintainers if that's a concern.
+You need a JDK 21 or later and Maven 3.9 or later.
 
-### We develop with GitHub
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
-
-### Process 
-
-#### Submit a GitHub issue in the Stratum repository
-
-[Stratum GitHub issues page.](https://github.com/capitalone/Stratum-Observability/issues/new/choose) Fill out the "Stratum Intake Request" issue template for both bugs and enhancements, providing as much detail as possible for your request.
-
-#### Intake approval process
-
-Once an issue is created, a maintainer will review the issue and provide feedback.
-
-The intake approval process is relatively informal. We will
- * Go over your request and use cases
- * Provide any feedback, questions, technical considerations, or complications that we notice
- * Let you know if any specific updates would be required with your changes 
-
-If we require additional information from you, we'll label the issue with *"engaged"* to indicate that it's mid-process and also add the correct request category: *"bug"*, *"enhancement"*, *"documentation"*, etc.
-
-Once we've looked over the issue, we'll label your PR as one of the following:
-* *"ready for contribution"* - your intake is approved and awaiting contributions
-* *"duplicate"* - the issue outlines a request that's already been decided on
-* *"wontfix"* - your intake is not something we plan to incorporate within Stratum. This may be because your enhancement is better suited as custom plugin instead
-
-## Local development
-
-### 1. Fork the Repository
-
-Start by forking the [@capitalone/Stratum-Observability repository](https://github.com/capitalone/Stratum-Observability/), and cloning that forked repository onto your local machine.
-
-### 2. Install dependencies
-
-```
-nvm use && npm ci
+```sh
+mvn -q verify
 ```
 
-### 3. Build
-This command will build out the compiled code within the repository's `dist/` folder.
+`mvn verify` compiles every module and runs one JUnit class per [requirement doc](docs/requirements). It then holds JaCoCo coverage at 100%, Checkstyle at its thresholds and Spotless at google-java-format. Each test starts a real `Stratum`, publishes as an app does, and reads what the plugin or listener received.
 
-```
-npm run build
-```
+## Checks
 
-#### build:watch
+The org's Fitness suite runs on every pull request. Run it locally through the shared hooks, as the [Fitness CI guide](https://github.com/may-journal/fitness-runner/blob/main/docs/ci.md) describes:
 
-To continuously build the application as you make changes, run
-```
-npm run build:watch
+```sh
+git config --local core.hooksPath .fitness-hooks
+"$HOME/.local/share/may-journal/fitness/fitness-install" --version latest
 ```
 
-#### build:analyze
+Checkstyle reads `config/checkstyle/checkstyle.xml`. Format the code with Spotless:
 
-Since Stratum is a build-time integration, bundle size is definitely one of our priorities. Run
-```
-npm run build:analyze
-```
-to get an estimate of the gzipped size of the library.
-
-#### Watching for changes
-For continuous building on changes, use the `build:watch` script instead.
-```
-npm run build:watch
-```
-
-### 4. Code quality & maintenance
-#### lint
-Run code quality checks via BiomeJS and attempt to fix any violations. The repo workflow will check if lint rules are satisfied as part of a pre-commit hook and on PR build. Run the following script and resolve any open findings that cannot be applied automatically.
-
-```
-npm run lint
-```
-
-
-### 5. Unit tests
-Unit tests are run via Jest.
-
-#### test
-Run full unit test suite.
-```
-npm run test
-```
-
-#### test:coverage
-Run full unit test suite and calculate code coverage reports.
-```
-npm run test:coverage
+```sh
+mvn -q spotless:apply
 ```
 
 ## Pull requests
 
-Once you are ready to merge your changes, open a pull request (PR) from your forked repository to the main project repository. Complete the provided template to help reviewers understand your changes.
-
-The template will prompt you for the following information:
-* A link to the connected Stratum intake request GitHub issue (include the "Fixes" prefix so that your issue will auto-close on PR merge)
-* Testing steps so that we can test your changes locally
-* A pre-release checklist to document the scope of your changes
-
-Once your PR is submitted, all Stratum maintainers will be automatically be requested for review. PRs require at least one maintainer to approve before it can be merged.
-
-## Release process
-
-After a maintainer approves your PR, they will merge it to the base branch and handle any release activities.
-
-* Add a *"complete"* label to your intake request.
-* If your changes require a new release, we will verify that the new version is available for download and create a new release tag in GitHub crediting you!
-
-We absolutely love and welcome any and all contributions. Thanks for being a part of the community! 
+- Add one `changelog/<yyyy-mm-dd-HHMM>-<change>.md` entry and link it from the description.
+- Name the agent that wrote the change in the description, such as Vanderbot Claude. `cspell.json` knows each agent name.
+- Change a requirement doc and its test together.
+- Keep the architecture views in step with the sources they name.

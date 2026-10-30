@@ -1,278 +1,60 @@
-# Stratum Observability | standardization as you publish
+# Stratum Observability for Java
 
-A no-dependency library defining a framework for sending analytics and observability events in a standardized format.
-Stratum is a plugin-based framework that allows you to create your own custom plugins to define, validate, and publish events
-to your observability stack. We also offer community-driven plugins for popular integrations.
+A JVM app writes its events down in a catalog. Stratum publishes each one to the plugins the app chose. Every event has one key, one meaning, and a list of the fields it may carry.
 
-**Common problems that Stratum helps solve:**
-1. Standardized data for clean queries, clear ownership, and strongest possible signals for alerting/reporting
-1. Being the first to know when your app is down, up, or sideways (let alone determining what any of those mean to you)
-1. Clear cataloging of what your product is capable of and who's using what
+This is the Java edition. The Swift edition lives in [may-journal/Stratum-Observability-Swift](https://github.com/may-journal/Stratum-Observability-Swift), and the TypeScript edition in [may-journal/Stratum-Observability](https://github.com/may-journal/Stratum-Observability), forked from Capital One's [Stratum Observability](https://github.com/capitalone/Stratum-Observability).
 
-## Getting started
+## Modules
 
-A typical Stratum implementation consists of:
-1. Stratum Catalog - single source of truth for the voice of your application
-1. Shared StratumService instance to load plugins and publish events from
-1. Functional code aka your application code! Any files containing logic you'd like to observe
+| Module | What it does |
+| --- | --- |
+| `stratum-core` | Catalogs, context, listeners and publishing. It needs no plugin and no runtime dependency. |
 
-```ts
-  import { StratumService } from '@capitalone/stratum-observability';
-  import { NewRelicPluginFactory } from '@capitalone/stratum-observability/plugins/new-relic';
+Plugins are built in the order [Plan #1](https://github.com/may-journal/Stratum-Observability-Java/issues/1) set. An OpenTelemetry plugin comes first, as its own module, and only an app that chooses a plugin sends data anywhere.
 
-  /**
-   * Using enumerated keys afford the best chance of consistent references throughout your application. 
-   * This replaces the need to hard code string values as reference.
-   */
-  export const EventKey = {
-    LOADED: 'app-loaded'
-  };
+## Install
 
-  /**
-   * Initialize Stratum with required arguments, again 
-   * typically within a shared file for re-use.
-   * 
-   * The StratumService is the engine for publishing.
-   */
-  export const stratumService = new StratumService({
-    /**
-     * 1+ plugins defining your standardized event schemas and how to
-     * map these schemas when published to your data collectors
-     * 
-     * The NewRelicPlugin is available from the @capitalone/stratum-observability library
-     */
-    plugins: [NewRelicPluginFactory()],
+Build the modules with Maven and depend on `io.github.mayjournal:stratum-core` plus the plugin modules the app uses. It needs Java 21.
 
-    /**
-     * The canonical name for referring to this capability
-     */
-    productName: 'stratumExampleApp',
-
-    /**
-     * Typically, this references the version of the application you're 
-     * publishing observability events from
-     */
-    productVersion: 'REPLACE_WITH_PRODUCT_VERSION',
-
-    /**
-     * Your "catalog" or dictionary serves as the source-of-truth of events 
-     * published by an application. This provides the structure for standardization.
-     * 
-     * Custom plugins allow you to define your own catalog events, attributes,
-     * and custom validation rules.
-     * 
-     * We've added an example event for the sake of getting started.
-     */
-    catalog: {
-      items: {
-        [EventKey.LOADED]: {
-          eventType: 'base', // The base event type for Stratum events
-          description: 'This application has loaded for the first time',
-          id: 1 // Very important reference identifier -- the key to simple queries (can be omitted to use the event key as id)
-        }
-      }
-    }
-  });
-
-  /**
-   * Publish your event via Stratum. In this example, Stratum will send your event
-   * to New Relic's Browser Agent, if available on the webpage.
-   * 
-   * (see: https://docs.newrelic.com/docs/browser/browser-monitoring/getting-started/introduction-browser-monitoring/)
-   */
-  stratumService.publish(EventKey.LOADED);
+```sh
+mvn -q verify
 ```
 
-## Installation
+## Use
 
-**Via npm:**
-```bash
-npm install @capitalone/stratum-observability
+Write a catalog, start one service with the app's plugins, and publish by key. An event's category can match a logger name the app already uses, so its entries sit beside the app's own lines.
+
+```java
+import io.github.mayjournal.stratum.Catalog;
+import io.github.mayjournal.stratum.Event;
+import io.github.mayjournal.stratum.Level;
+import io.github.mayjournal.stratum.Stratum;
+
+Catalog catalog = new Catalog("Notes", "1.0", Map.of(
+    "note.saved", new Event("A person saved a note", "editor", Level.INFO,
+        Set.of("words"), Set.of("title")),
+    "sync.failed", new Event("The notes failed to sync", "sync", Level.ERROR)));
+
+Stratum stratum = new Stratum("Notes", "2.1", List.of(catalog), List.of(plugin));
+
+stratum.setContext("screen", "Today");
+stratum.publish("note.saved", Map.of("words", "120", "title", "Dentist at noon"));
 ```
 
-**Via yarn:**
-```bash
-yarn add @capitalone/stratum-observability
-```
+- A key no catalog holds publishes nothing, and `publish` returns false.
+- A field the event does not name is dropped.
+- Public fields may be shown anywhere; a plugin keeps private fields out of what it sends.
+- Context is public, so keep what a person wrote out of it.
+- A plugin is any class that implements `Plugin`. Adding a second plugin with the same name replaces the first.
+- Adding a catalog throws `CatalogException` for a key or category of more than one word.
+- It also throws for a field that is both public and private, or a key another catalog holds.
 
-## Creating a custom plugin
+## Docs
 
-### Creating a new plugin
+- [Requirements](docs/requirements): what the library promises, one test for each acceptance.
+- [Architecture](docs/architecture): the five views, from system context to user journey.
+- [Contributing](CONTRIBUTING.md): how to build, test and check a change.
 
-Plugins are composed of 3 pieces of data:
-1. Name as a string identifier (required)
-2. Map of eventTypes to the correspond EventModel class (optional)
-3. One or more instantiated publishers to handle specific event type(s) (optional)
+## License
 
-```javascript
-import { BasePlugin } from '@capitalone/stratum-observability';
-
-/**
- * For TypeScript support, BasePlugin accepts types for 
- */
-export class SimplePlugin extends BasePlugin<never, never> {
-  name: 'mySimplePlugin',
-  eventTypes: {
-    // Map catalog events with { eventType: 'simple' } to an instance of SimpleEventModel
-    simple: SimpleEventModel
-  },
-  publishers: [ new SimplePublisher() ]
-}
-```
-
-Each of the concepts above are explained in further detail in the following sections.
-
-#### Plugin factories
-If you have a configurable plugin that can be customized based on context, define your plugin as a PluginFactory instead of a static object. Plugin factories are a function that (optionally) take in arguments and return a new plugin instance on each execution.
-
-Plugin factory options are good way to dynamically define plugins or pass initialization data to publishers at run-time. Use this in cases where your plugin needs to behave differently based on what application or environment is using it.
-
-```javascript title="Simple plugin factory"
-import type { PluginFactory } from '@capitalone/stratum-observability';
-const SimplePluginFactory: PluginFactory<SimplePlugin> = () => new SimplePlugin();
-const myPluginInstance = SimplePluginFactory();
-```
-
-```javascript title="Plugin factory with *optional* options"
-import type { PluginFactory } from '@capitalone/stratum-observability';
-
-interface MyOptions {
-  isLoggedIn: boolean
-}
-
-const SimplePluginFactoryWithOptions: PluginFactory<SimplePlugin> = (options) => {
-  return options?.isLoggedIn ? new SimplePluginWAuthentication() : new SimplePlugin();
-}
-
-/**
- * In the above, options is optional so both of the
- * following implementations are allowed by the compiler.
- */
-const myPluginInstance = SimplePluginFactoryWithOptions(); // Valid
-const myPluginInstanceWithOptions = SimplePluginFactoryWithOptions({ isLoggedIn: true }); // Also valid
-```
-
-### Catalog entries
-Through plugins, you may define custom event type which are referenced by the `eventType` property on your catalog items. Any events loaded into your StratumService must have a corresponding eventType to EventModel relation defined via a plugin.
-
-```javascript
-import { StratumCatalog, CatalogEvent } from '@capitalone/stratum-observability';
-
-const SimpleEventType = 'my-simple-event';
-
-/**
- * Creates a new event type with the base stratum event fields
- * and an additional "simpleValue" number attribute
- */
-interface SimpleEvent extends StratumEvent<SimpleEventType> {
-  simpleValue: number;
-}
-
-/**
- * A catalog composed of SimpleEvents can then
- * be defined.
- * 
- * If you do not provide your custom event type interface as a generic
- * to the StratumCatalog type, type-hinting for required properties
- * will not be available. 
- * 
- * Multiple custom event type interfaces can be added as a union:
- * `StratumCatalog<SimpleEvent | ComplexEvent>`
- * 
- * Note: Use `satisfies` instead of a type annotation `:` to preserve
- * literal key types for run-time catalogs published with type-hinting.
- * 
- */
-const catalog = {
-  'my-event': {
-    eventType: SimpleEventType,
-
-    // Implement the required base properties required by Stratum
-    description: 'My simple event that fires from the "mySimplePlugin" plugin',
-    id: 1,
-
-    // Additional fields defined by SimpleEvent
-    simpleValue: 12345
-  }
-} satisfies StratumCatalog<SimpleEvent>;
-```
-
-#### Type-safe keys with `satisfies`
-Using `satisfies StratumCatalog<T>` instead of `: StratumCatalog<T>` preserves literal key types. This enables compile-time key checking when publishing via `catalog.publish()` from `RegisteredStratumCatalog` instance (via `addCatalog()`).
-
-Note: type-safe keys only apply to catalog-level publishing. Publishing through the service (`stratum.publish(key)`) does not support compile-time key checking.
-
-### Event models
-```javascript
-import { BaseEventModel } from '@capitalone/stratum-observability';
-
-// Pass your SimpleEvent interface into the base EventModel
-export class SimpleEventModel extends BaseEventModel<SimpleEvent> {
-  // Override to include any custom run-time validation rules
-  protected checkValidity(): boolean {
-    let isValid = super.checkValidity();
-
-    if(!this.item.simpleValue || typeof this.item.simpleValue === 'number') {
-      this.addValidationError('The "simpleValue" value provided is in an invalid format');
-      isValid = false;
-    }
-
-    return isValid;
-  }
-}
-```
-
-### Publisher models
-```javascript
-import { BasePublisher, EventOptions } from '@capitalone/stratum-observability';
-
-interface ExternalEventSchema {
-  id: number,
-  simpleValue: number
-}
-
-export class SimplePublisher extends BasePublisher<ExternalEventSchema> {
-  // Required
-  name = 'SimplePublisher';
-
-  /**
-   * Required
-   * Check if your publisher source is available (aka scripts installed, environment
-   * is set up, etc.)
-   * 
-   * In this case, we make sure that console.log() is accessible.
-   */
-  async isAvailable(_model: SimpleEventModel) {
-    return typeof console !== 'undefined';
-  }
-
-  /**
-   * Required
-   * Map the contents of your event model instance to your event schema
-   */
-  getModelOutput(model: SimpleEventModel, options?: Partial<EventOptions>): ExternalEventSchema {
-    const data = model.getData(options);
-    return {
-      id: data.id,
-      simpleValue: data.simpleValue
-    };
-  }
-
-  /**
-   * Required
-   * Send your simple event content to the external publisher
-   * 
-   * In this, case we publish the event to the console log
-   */
-  async publish(event: ExternalEventSchema) {
-    console.log('publishing simple event!', { id: event.id, simpleValue: event.simpleValue });
-  }
-}
-```
-
-## Contributing
-We welcome and appreciate your contributions! 
-
-If you have suggestions or find a bug, please [open an issue](https://github.com/capitalone/Stratum-Observability/issues/new/choose).
-
-If you want to contribute, visit the [contributing page](https://github.com/capitalone/Stratum-Observability/blob/main/CONTRIBUTING.md).
+Apache 2.0, as the upstream project. See [LICENSE](LICENSE).
