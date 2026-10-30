@@ -22,8 +22,10 @@
 
   <modules>
     <module>stratum-core</module>
-    <module>stratum-otel</module>
     <module>stratum-log</module>
+    <module>stratum-otel-parent</module>
+    <module>stratum-otel-logs</module>
+    <module>stratum-otel-metrics</module>
   </modules>
 
   <properties>
@@ -32,6 +34,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <checkstyle.config.location>${maven.multiModuleProjectDirectory}/config/checkstyle/checkstyle.xml</checkstyle.config.location>
     <junit.version>6.0.3</junit.version>
+    <opentelemetry.version>1.67.0</opentelemetry.version>
   </properties>
 
   <dependencyManagement>
@@ -40,6 +43,13 @@
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.opentelemetry</groupId>
+        <artifactId>opentelemetry-bom</artifactId>
+        <version>${opentelemetry.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

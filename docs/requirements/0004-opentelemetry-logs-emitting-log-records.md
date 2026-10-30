@@ -10,12 +10,12 @@ published events the app's exporter holds as log records with private fields hid
 
 -
 
-events published through the OpenTelemetry plugin
+events with the log type published through the OpenTelemetry logs plugin
 
 ## Requirements
 
 - 0004.1
-    - Given Developer uses the OpenTelemetry plugin with my logger provider
+    - Given Developer uses the OpenTelemetry logs plugin with my logger provider
         - When I publish through it
             - Then my exporter holds one record that names the event's key and id
 - 0004.2
@@ -35,6 +35,10 @@ events published through the OpenTelemetry plugin
         - When I emit an event
             - Then the record's body is the event's description and its attributes name my product and version
 - 0004.6
-    - Given Developer adds a second OpenTelemetry plugin with another provider
+    - Given Developer adds a second OpenTelemetry logs plugin with another provider
         - When I save a note
             - Then only the second provider's exporter holds the record
+- 0004.7
+    - Given Developer has an event of the metric type
+        - When I open a note
+            - Then my exporter holds no record

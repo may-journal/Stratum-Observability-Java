@@ -10,8 +10,10 @@ This is the Java edition. The Swift edition lives in [may-journal/Stratum-Observ
 | --- | --- |
 | `stratum-core` | Catalogs, context, listeners and publishing. It needs no plugin and no runtime dependency. |
 | `stratum-log` | `LogPlugin` writes each event with the `LogType.LOG` type as one text line through `System.Logger`. It works with java.util.logging, SLF4J and Log4j 2 through their bridges, with no dependency of its own. |
+| `stratum-otel-logs` | `OpenTelemetryLogsPlugin` emits each event with the `OpenTelemetryLogType.LOG` type as a log record through the app's `LoggerProvider`. |
+| `stratum-otel-metrics` | `OpenTelemetryMetricsPlugin` records each event with the `MetricType.METRIC` type through the app's `MeterProvider`, as its `MetricSettings` describe. |
 
-Plugins are built in the order [Plan #1](https://github.com/may-journal/Stratum-Observability-Java/issues/1) set. An OpenTelemetry plugin comes first, as its own module, and only an app that chooses a plugin sends data anywhere.
+Plugins are built in the order [Plan #1](https://github.com/may-journal/Stratum-Observability-Java/issues/1) set. Each plugin is its own module, and only an app that chooses a plugin sends data anywhere. See [Using OpenTelemetry](docs/usage/opentelemetry.md) to wire either OpenTelemetry plugin or both.
 
 ## Install
 
@@ -193,6 +195,7 @@ NoteKey.DELETED, Event.of(AuditType.AUDIT, "A person deleted a note", 3)
 - [Requirements](docs/requirements): what the library promises, one test for each acceptance.
 - [Architecture](docs/architecture): the five views, from system context to user journey.
 - [Text log plugin](docs/usage/log.md): how lines look, and which logging libraries the plugin works with.
+- [Using OpenTelemetry](docs/usage/opentelemetry.md): how to wire the OpenTelemetry logs and metrics plugins.
 - [Contributing](CONTRIBUTING.md): how to build, test and check a change.
 
 ## License

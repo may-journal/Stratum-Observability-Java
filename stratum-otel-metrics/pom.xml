@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>stratum</groupId>
+    <artifactId>stratum-otel-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../stratum-otel-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>stratum-otel-metrics</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Stratum OpenTelemetry metrics plugin</name>
+  <description>Records each Stratum event the catalog marks as a metric through the app's own MeterProvider.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-sdk-metrics</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

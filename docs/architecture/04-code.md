@@ -159,6 +159,6 @@ Numbers on classes and letters on relationships match the callout table.
 
 ## Tests
 
-`mvn verify` runs the `src/test/java` folder of `stratum-core`, `stratum-otel` and `stratum-log`, one JUnit class per requirement doc. Each test starts a real `Stratum` for the notes catalog and publishes as an app does. It reads what the plugin or listener received, or compiles app code with the JDK compiler.
+`mvn verify` runs the `src/test/java` folder of `stratum-core`, `stratum-otel-logs`, `stratum-otel-metrics` and `stratum-log`, one JUnit class per requirement doc. Each test starts a real `Stratum` for the notes catalog and publishes as an app does. It reads what the plugin or listener received, or compiles app code with the JDK compiler.
 
-The OpenTelemetry tests read records from an in-memory exporter, and the text log tests read lines from a java.util.logging handler. JaCoCo holds line and branch coverage of each module at 100%.
+The OpenTelemetry tests read records from an in-memory exporter and metrics from an in-memory reader. The text log tests read lines from a java.util.logging handler. JaCoCo holds line and branch coverage of each module at 100%.
