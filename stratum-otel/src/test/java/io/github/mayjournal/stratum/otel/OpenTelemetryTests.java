@@ -2,11 +2,11 @@ package io.github.mayjournal.stratum.otel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.mayjournal.stratum.Catalog;
 import io.github.mayjournal.stratum.CatalogException;
-import io.github.mayjournal.stratum.Event;
-import io.github.mayjournal.stratum.Level;
+import io.github.mayjournal.stratum.Notes;
+import io.github.mayjournal.stratum.Plugin;
 import io.github.mayjournal.stratum.Stratum;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.logs.Severity;
@@ -16,47 +16,39 @@ import io.opentelemetry.sdk.logs.export.SimpleLogRecordProcessor;
 import io.opentelemetry.sdk.testing.exporter.InMemoryLogRecordExporter;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 /** Requirement 0004: emitting log records. */
 class OpenTelemetryTests {
 
-  /** The key a person's saved note publishes under. */
-  static final String SAVED = "note.saved";
+  /** The exporter an app configures, and the provider that delivers records to it. */
+  record App(InMemoryLogRecordExporter exporter, SdkLoggerProvider provider) {
+    static App start() {
+      InMemoryLogRecordExporter exporter = InMemoryLogRecordExporter.create();
+      SdkLoggerProvider provider =
+          SdkLoggerProvider.builder()
+              .addLogRecordProcessor(SimpleLogRecordProcessor.create(exporter))
+              .build();
+      return new App(exporter, provider);
+    }
 
-  /** The catalog every requirement starts from: a note a person saves, and a failed sync. */
-  static final Catalog NOTES =
-      new Catalog(
-          "Notes",
-          "1.0",
-          Map.of(
-              SAVED,
-              new Event("A person saved a note", "editor", Level.INFO, Set.of("words"), Set.of("title")),
-              "sync.failed",
-              new Event("The notes failed to sync", "sync", Level.ERROR)));
+    Plugin plugin() {
+      return new OpenTelemetryPlugin(provider);
+    }
 
-  /**
-   * A person acts in the notes app, which publishes {@code key} through an OpenTelemetry plugin
-   * wired to the app's own in-memory exporter; the records that exporter holds after.
-   */
-  static List<LogRecordData> publish(String key, Map<String, String> fields)
-      throws CatalogException {
-    InMemoryLogRecordExporter exporter = InMemoryLogRecordExporter.create();
-    try (SdkLoggerProvider provider =
-        SdkLoggerProvider.builder()
-            .addLogRecordProcessor(SimpleLogRecordProcessor.create(exporter))
-            .build()) {
-      Stratum stratum =
-          new Stratum("Notes", "2.1", List.of(NOTES), List.of(new OpenTelemetryPlugin(provider)));
-      stratum.publish(key, fields);
+    List<LogRecordData> records() {
       return exporter.getFinishedLogRecordItems();
     }
   }
 
-  /** The one record the exporter holds after a person acts. */
+  /**
+   * A person acts in the notes app, which publishes {@code key} through an OpenTelemetry plugin
+   * wired to the app's own in-memory exporter; the one record that exporter holds after.
+   */
   static LogRecordData record(String key, Map<String, String> fields) throws CatalogException {
-    List<LogRecordData> records = publish(key, fields);
+    App app = App.start();
+    Notes.stratum(app.plugin()).publish(key, fields);
+    List<LogRecordData> records = app.records();
     assertEquals(1, records.size());
     return records.get(0);
   }
@@ -67,8 +59,8 @@ class OpenTelemetryTests {
 
   @Test
   void test0004_1() throws CatalogException {
-    LogRecordData record = record(SAVED, Map.of());
-    assertEquals(SAVED, attribute(record, "stratum.key"));
+    LogRecordData record = record(Notes.SAVED, Map.of());
+    assertEquals(Notes.SAVED, attribute(record, "stratum.key"));
     assertEquals("editor", attribute(record, "stratum.category"));
   }
 
@@ -81,24 +73,35 @@ class OpenTelemetryTests {
 
   @Test
   void test0004_3() throws CatalogException {
-    LogRecordData record = record(SAVED, Map.of("words", "120"));
+    LogRecordData record = record(Notes.SAVED, Map.of("words", "120"));
     assertEquals("120", attribute(record, "words"));
   }
 
   @Test
   void test0004_4() throws CatalogException {
-    LogRecordData record = record(SAVED, Map.of("title", "Dentist at noon"));
+    LogRecordData record = record(Notes.SAVED, Map.of("title", "Dentist at noon"));
     assertEquals(OpenTelemetryPlugin.PRIVATE, attribute(record, "title"));
     assertFalse(record.toString().contains("Dentist"));
   }
 
   @Test
   void test0004_5() throws CatalogException {
-    LogRecordData record = record(SAVED, Map.of());
+    LogRecordData record = record(Notes.SAVED, Map.of());
     assertEquals("A person saved a note", record.getBodyValue().asString());
     assertEquals("Notes", attribute(record, "stratum.product"));
     assertEquals("2.1", attribute(record, "stratum.version"));
     assertEquals("Notes", record.getInstrumentationScopeInfo().getName());
     assertEquals("2.1", record.getInstrumentationScopeInfo().getVersion());
+  }
+
+  @Test
+  void test0004_6() throws CatalogException {
+    App first = App.start();
+    App second = App.start();
+    Stratum stratum = Notes.stratum(first.plugin());
+    stratum.add(second.plugin());
+    stratum.publish(Notes.SAVED);
+    assertTrue(first.records().isEmpty());
+    assertEquals(1, second.records().size());
   }
 }

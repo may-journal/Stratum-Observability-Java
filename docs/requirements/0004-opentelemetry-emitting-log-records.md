@@ -34,3 +34,7 @@ events published through the OpenTelemetry plugin
     - Given Developer made the service for my product
         - When I emit an event
             - Then the record's body is the event's meaning and its attributes name my product and version
+- 0004.6
+    - Given Developer adds a second OpenTelemetry plugin with another provider
+        - When I publish once
+            - Then only the second provider's exporter holds the record

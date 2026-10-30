@@ -19,8 +19,8 @@ import java.util.Objects;
  * attributes carry the key, category, product, version, context and public fields in the clear.
  * Private fields appear by name only, with their values replaced by {@value #PRIVATE}.
  *
- * <p>The plugin owns no exporter or endpoint. Where records go, and whether they leave the
- * process at all, is decided by the provider the app passes in.
+ * <p>The plugin owns no exporter or endpoint. Where records go, and whether they leave the process
+ * at all, is decided by the provider the app passes in.
  */
 public final class OpenTelemetryPlugin implements Plugin {
 
@@ -43,8 +43,8 @@ public final class OpenTelemetryPlugin implements Plugin {
   public static final AttributeKey<String> VERSION = AttributeKey.stringKey("stratum.version");
 
   /**
-   * The OpenTelemetry severity for each event level, following the specification's syslog
-   * mapping: notice is one step above info, and a fault is fatal.
+   * The OpenTelemetry severity for each event level, following the specification's syslog mapping:
+   * notice is one step above info, and a fault is fatal.
    */
   private static final Map<Level, Severity> SEVERITIES = severities();
 
@@ -87,8 +87,8 @@ public final class OpenTelemetryPlugin implements Plugin {
   }
 
   /**
-   * The record's attributes: the event's identity, then its context, then its public fields,
-   * then its private fields redacted. A later group wins a name the groups share.
+   * The record's attributes: the event's identity, then its context, then its public fields, then
+   * its private fields redacted. A later group wins a name the groups share.
    */
   static Attributes attributes(Snapshot snapshot) {
     AttributesBuilder builder =
