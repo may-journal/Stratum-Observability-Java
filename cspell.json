@@ -26,6 +26,7 @@
     "puppycrawl",
     "surefire",
     "Totalist",
+    "Vanderbot",
     "Werror",
     "Xlint"
   ]

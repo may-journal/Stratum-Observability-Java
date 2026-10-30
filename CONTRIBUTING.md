@@ -32,5 +32,6 @@ mvn -q spotless:apply
 ## Pull requests
 
 - Add one `changelog/<yyyy-mm-dd-HHMM>-<change>.md` entry and link it from the description.
+- Name the agent that wrote the change in the description, such as Vanderbot Claude. `cspell.json` knows each agent name.
 - Change a requirement doc and its test together.
 - Keep the architecture views in step with the sources they name.
