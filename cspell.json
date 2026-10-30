@@ -21,6 +21,7 @@
     "fitnessrc",
     "jacoco",
     "javadoc",
+    "Logback",
     "jasonvanderslice",
     "javax",
     "puppycrawl",
