@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 
 /**
  * The service an app publishes catalogued events through. It holds the catalogs, the plugins and
- * the context, and turns each published key into one snapshot for every plugin that accepts it.
- * Every method is safe to call from any thread.
+ * the context, and turns each published key into one snapshot for every plugin that should publish
+ * it. Every method is safe to call from any thread.
  */
 public final class Stratum {
 
@@ -30,8 +30,8 @@ public final class Stratum {
   /**
    * Starts a service for one product, with its first catalogs and plugins.
    *
-   * @throws CatalogException when a catalog holds an event that cannot be published, or a key
-   *     another catalog already holds
+   * @throws CatalogException when a catalog holds an event that cannot be published, a key another
+   *     catalog already holds, or an event a plugin refuses
    */
   public Stratum(String product, String version, List<Catalog> catalogs, List<Plugin> plugins)
       throws CatalogException {
@@ -48,11 +48,11 @@ public final class Stratum {
   /**
    * Adds a catalog, or replaces the one with the same name.
    *
-   * @throws CatalogException when an event cannot be published or another catalog already holds one
-   *     of its keys
+   * @throws CatalogException when an event cannot be published, another catalog already holds one
+   *     of its keys, or a plugin refuses one of its events
    */
   public void add(Catalog catalog) throws CatalogException {
-    validate(catalog);
+    validate(catalog, held());
     synchronized (lock) {
       Map<String, Catalog> others = new HashMap<>(catalogs);
       others.remove(catalog.name());
@@ -63,13 +63,28 @@ public final class Stratum {
     }
   }
 
-  /** Throws for the first event, by key, that cannot be published. */
-  private static void validate(Catalog catalog) throws CatalogException {
+  /**
+   * Throws for the first event, by key, that cannot be published, or that one of {@code plugins}
+   * refuses among the events whose types it accepts.
+   */
+  private static void validate(Catalog catalog, List<Plugin> plugins) throws CatalogException {
     for (Map.Entry<String, Event> entry : new TreeMap<>(catalog.events()).entrySet()) {
       String reason = entry.getValue().problem(entry.getKey());
       if (reason != null) {
         throw CatalogException.invalidEvent(entry.getKey(), reason);
       }
+      for (Plugin plugin : plugins) {
+        if (Event.reaches(plugin.acceptedTypes(), entry.getValue().eventTypes())) {
+          plugin.check(entry.getKey(), entry.getValue());
+        }
+      }
+    }
+  }
+
+  /** The plugins the service holds now. */
+  private List<Plugin> held() {
+    synchronized (lock) {
+      return List.copyOf(plugins);
     }
   }
 
@@ -89,8 +104,19 @@ public final class Stratum {
     }
   }
 
-  /** Adds a plugin, or replaces the one with the same name. */
-  public void add(Plugin plugin) {
+  /**
+   * Adds a plugin, or replaces the one with the same name.
+   *
+   * @throws CatalogException when the plugin refuses an event of a catalog the service holds
+   */
+  public void add(Plugin plugin) throws CatalogException {
+    final List<Catalog> held;
+    synchronized (lock) {
+      held = List.copyOf(catalogs.values());
+    }
+    for (Catalog catalog : held) {
+      validate(catalog, List.of(plugin));
+    }
     synchronized (lock) {
       plugins.removeIf(other -> other.name().equals(plugin.name()));
       plugins.add(plugin);
@@ -147,6 +173,8 @@ public final class Stratum {
               event.meaning(),
               event.category(),
               event.level(),
+              event.eventTypes(),
+              event.settings(),
               only(fields, event.publicFields()),
               only(fields, event.privateFields()),
               context,
@@ -157,7 +185,9 @@ public final class Stratum {
       targets = List.copyOf(plugins);
     }
     heard.forEach(listener -> listener.accept(snapshot));
-    targets.stream().filter(plugin -> plugin.accepts(snapshot)).forEach(p -> p.publish(snapshot));
+    targets.stream()
+        .filter(plugin -> plugin.shouldPublish(snapshot))
+        .forEach(plugin -> plugin.publish(snapshot.forPlugin(plugin.acceptedTypes())));
     return true;
   }
 

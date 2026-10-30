@@ -49,6 +49,30 @@ stratum.publish("note.saved", Map.of("words", "120", "title", "Dentist at noon")
 - Adding a catalog throws `CatalogException` for a key or category of more than one word.
 - It also throws for a field that is both public and private, or a key another catalog holds.
 
+### Types
+
+A plugin module defines its event types as an enum that implements `EventType`. Its settings are a record that implements `EventSettings`. Stratum defines no types and never reads settings.
+
+```java
+enum AuditType implements EventType { AUDIT }
+
+record AuditSettings(String trail) implements EventSettings {
+  public EventType type() { return AuditType.AUDIT; }
+}
+
+Event deleted = new Event("A person deleted a note", "editor")
+    .types(AuditType.AUDIT)
+    .with(new AuditSettings("notes"));
+```
+
+- A plugin returns the types it accepts from `acceptedTypes()`. It receives an event that has one of them.
+- A plugin that accepts no types, the default, receives every event. An event with no types reaches only those plugins.
+- Types match by name, so two modules may each define a type with the same name and both receive its events.
+- Each plugin receives only its accepted types and their settings, through `snapshot.settings(AuditSettings.class)`.
+- A plugin can override `shouldPublish` to filter on what an event carries.
+- Its `check` can refuse a bad event with `CatalogException` when its catalog or the plugin is added.
+- Adding a catalog also throws for settings whose type the event does not have.
+
 ## Docs
 
 - [Requirements](docs/requirements): what the library promises, one test for each acceptance.

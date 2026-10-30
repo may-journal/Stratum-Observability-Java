@@ -12,8 +12,11 @@ public final class CatalogException extends Exception {
     this.key = key;
   }
 
-  /** An event in the catalog cannot be published. */
-  static CatalogException invalidEvent(String key, String reason) {
+  /**
+   * An event in the catalog cannot be published, for {@code reason}. A plugin throws this from
+   * {@link Plugin#check} for an event it cannot send.
+   */
+  public static CatalogException invalidEvent(String key, String reason) {
     return new CatalogException(key, "event " + key + " is invalid: " + reason);
   }
 

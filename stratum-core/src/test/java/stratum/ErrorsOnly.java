@@ -8,7 +8,7 @@ final class ErrorsOnly extends Recorder {
   }
 
   @Override
-  public boolean accepts(Snapshot snapshot) {
+  public boolean shouldPublish(Snapshot snapshot) {
     return snapshot.level() == Level.ERROR;
   }
 }

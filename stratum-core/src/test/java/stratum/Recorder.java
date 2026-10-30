@@ -3,7 +3,7 @@ package stratum;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A plugin an app writes for itself, which keeps every snapshot it receives. */
+/** A plugin an app writes for itself, which accepts every event and keeps each snapshot. */
 class Recorder implements Plugin {
 
   private final String name;
