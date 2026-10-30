@@ -2,7 +2,7 @@
 
 ## Why
 
-Each event tells me where the app was and which product it came from, and carries only the fields I allowed.
+Each `stratum.Snapshot` tells me where the app was and which product it came from, and carries only the fields I allowed.
 
 ## Measurement
 

@@ -2,7 +2,7 @@
 
 ## Why
 
-My app publishes only the events I wrote down in a catalog, so every event my team reads has one known meaning.
+My app publishes only the events I wrote down in a `stratum.Catalog`, so every event my team reads has one known meaning.
 
 ## Measurement
 
