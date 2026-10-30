@@ -45,16 +45,6 @@ public final class Stratum {
     }
   }
 
-  /** The product the service was started for. */
-  public String product() {
-    return product;
-  }
-
-  /** The product's version. */
-  public String version() {
-    return version;
-  }
-
   /**
    * Adds a catalog, or replaces the one with the same name.
    *

@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 /** The notes product most requirements start from: a note a person saves, and a failed sync. */
-final class Notes {
+public final class Notes {
 
-  static final String SAVED = "note.saved";
+  public static final String SAVED = "note.saved";
   static final String SHARED = "note.shared";
 
   /** The catalog of the notes product. */
@@ -25,7 +25,7 @@ final class Notes {
   private Notes() {}
 
   /** A service for the notes product with {@code plugins}. */
-  static Stratum stratum(Plugin... plugins) throws CatalogException {
+  public static Stratum stratum(Plugin... plugins) throws CatalogException {
     return new Stratum("Notes", "2.1", List.of(CATALOG), List.of(plugins));
   }
 

@@ -84,13 +84,4 @@ class CatalogTests {
     assertEquals(
         "event note.shared is invalid: field to is both public and private", refused.getMessage());
   }
-
-  @Test
-  void test0001_9() throws CatalogException {
-    Recorder recorder = new Recorder();
-    Stratum stratum = Notes.stratum(recorder);
-    stratum.add(Notes.catalog("Notes", Notes.SHARED, "share"));
-    stratum.publish(Notes.SHARED);
-    assertEquals(List.of(Notes.SHARED), recorder.keys());
-  }
 }

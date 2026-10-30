@@ -23,10 +23,11 @@ class SnapshotTests {
   void test0002_2() throws CatalogException {
     Recorder recorder = new Recorder();
     Stratum stratum = Notes.stratum(recorder);
-    stratum.publish(Notes.SAVED, Map.of("words", "120", "body", "Call the dentist"));
+    stratum.publish(
+        Notes.SAVED, Map.of("words", "120", "title", "Dentist", "body", "Call the dentist"));
     Snapshot snapshot = recorder.snapshots().get(0);
     assertEquals(Map.of("words", "120"), snapshot.publicFields());
-    assertEquals(Map.of(), snapshot.privateFields());
+    assertEquals(Map.of("title", "Dentist"), snapshot.privateFields());
   }
 
   @Test

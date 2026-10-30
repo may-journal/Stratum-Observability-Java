@@ -32,6 +32,7 @@ class PluginTests {
     Stratum stratum = Notes.stratum(first);
     stratum.add(second);
     stratum.publish(Notes.SAVED);
-    assertEquals(List.of(0, 1), List.of(first.keys().size(), second.keys().size()));
+    assertEquals(List.of(), first.keys());
+    assertEquals(List.of(Notes.SAVED), second.keys());
   }
 }
