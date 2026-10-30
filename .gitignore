@@ -1,8 +1,10 @@
-.idea
+# macOS Finder metadata
 .DS_Store
-.vscode
-.rollup.cache
-coverage
-node_modules
-dist
-temp
+# ad-hoc tool and build logs
+*.log
+# Maven's per-module build output, so parallel worktrees never share it
+target/
+# IntelliJ workspace state
+.idea/
+# VS Code workspace state
+.vscode/
