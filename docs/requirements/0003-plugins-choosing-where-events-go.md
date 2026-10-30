@@ -2,7 +2,7 @@
 
 ## Why
 
-I choose which plugins receive my events, and each plugin takes only the events it wants.
+I choose which `stratum.Plugin` classes receive my events, and each plugin takes only the events it wants.
 
 ## Measurement
 

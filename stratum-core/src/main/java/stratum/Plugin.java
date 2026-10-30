@@ -1,4 +1,4 @@
-package io.github.mayjournal.stratum;
+package stratum;
 
 /** A destination for published events, such as an OpenTelemetry logger. */
 public interface Plugin {

@@ -12,10 +12,10 @@ C4Component
         Component(poms, "2 Maven build", "XML", "pom.xml, stratum-core/pom.xml, config/checkstyle/checkstyle.xml")
     }
 
-    Container_Boundary(core, "3 stratum-core (stratum-core/src/main/java/io/github/mayjournal/stratum)") {
-        Component(service, "4 Service", "Java", "stratum-core/src/main/java/io/github/mayjournal/stratum/Stratum.java")
-        Component(catalog, "5 Catalog", "Java", "stratum-core/src/main/java/io/github/mayjournal/stratum/Catalog.java, stratum-core/src/main/java/io/github/mayjournal/stratum/CatalogException.java, stratum-core/src/main/java/io/github/mayjournal/stratum/Event.java, stratum-core/src/main/java/io/github/mayjournal/stratum/Level.java")
-        Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/io/github/mayjournal/stratum/Snapshot.java, stratum-core/src/main/java/io/github/mayjournal/stratum/Plugin.java")
+    Container_Boundary(core, "3 stratum-core (stratum-core/src/main/java/stratum)") {
+        Component(service, "4 Service", "Java", "stratum-core/src/main/java/stratum/Stratum.java")
+        Component(catalog, "5 Catalog", "Java", "stratum-core/src/main/java/stratum/Catalog.java, stratum-core/src/main/java/stratum/CatalogException.java, stratum-core/src/main/java/stratum/Event.java, stratum-core/src/main/java/stratum/Level.java")
+        Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/stratum/Snapshot.java, stratum-core/src/main/java/stratum/Plugin.java")
     }
 
     Rel(dev, poms, "A")

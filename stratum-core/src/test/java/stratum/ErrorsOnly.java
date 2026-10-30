@@ -1,4 +1,4 @@
-package io.github.mayjournal.stratum;
+package stratum;
 
 /** A recorder that takes only error events, as a crash reporter would. */
 final class ErrorsOnly extends Recorder {

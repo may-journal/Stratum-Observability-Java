@@ -14,7 +14,7 @@ Plugins are built in the order [Plan #1](https://github.com/may-journal/Stratum-
 
 ## Install
 
-Build the modules with Maven and depend on `io.github.mayjournal:stratum-core` plus the plugin modules the app uses. It needs Java 21.
+Build the modules with Maven and depend on `stratum:stratum-core` plus the plugin modules the app uses. It needs Java 21.
 
 ```sh
 mvn -q verify
@@ -25,10 +25,10 @@ mvn -q verify
 Write a catalog, start one service with the app's plugins, and publish by key. An event's category can match a logger name the app already uses, so its entries sit beside the app's own lines.
 
 ```java
-import io.github.mayjournal.stratum.Catalog;
-import io.github.mayjournal.stratum.Event;
-import io.github.mayjournal.stratum.Level;
-import io.github.mayjournal.stratum.Stratum;
+import stratum.Catalog;
+import stratum.Event;
+import stratum.Level;
+import stratum.Stratum;
 
 Catalog catalog = new Catalog("Notes", "1.0", Map.of(
     "note.saved", new Event("A person saved a note", "editor", Level.INFO,
