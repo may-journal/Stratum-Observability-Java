@@ -4,6 +4,8 @@
 
 Each `stratum.Snapshot` tells me where the app was and which product it came from, and carries only the fields I allowed.
 
+I pass each dynamic value as a JDK key-value pair of my field constant and its value, such as `entry(NoteField.WORDS, "120")`.
+
 ## Measurement
 
 published events that carry the context and only allowed fields
@@ -34,3 +36,7 @@ published events
     - Given Developer has cleared a context value
         - When I publish after clearing it
             - Then the event leaves that value out
+- 0002.6
+    - Given Developer gave an event an id and a level
+        - When I publish the event
+            - Then it carries that id and level

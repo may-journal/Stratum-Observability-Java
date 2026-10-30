@@ -9,30 +9,29 @@ import org.junit.jupiter.api.Test;
 class PluginTests {
 
   @Test
-  void test0003_1() throws CatalogException {
-    Stratum stratum = Notes.stratum();
+  void test0003_1() {
+    Stratum stratum = NotesEngine.start();
     Recorder recorder = new Recorder();
     stratum.add(recorder);
-    stratum.publish(Notes.SAVED);
-    assertEquals(List.of(Notes.SAVED), recorder.keys());
+    stratum.publish(NoteKey.SAVED);
+    assertEquals(List.of("note.saved"), recorder.keys());
   }
 
   @Test
-  void test0003_2() throws CatalogException {
+  void test0003_2() {
     ErrorsOnly errors = new ErrorsOnly();
-    Stratum stratum = Notes.stratum(errors);
-    stratum.publish(Notes.SAVED);
+    NotesEngine.start(errors).publish(NoteKey.SAVED);
     assertEquals(List.of(), errors.keys());
   }
 
   @Test
-  void test0003_3() throws CatalogException {
+  void test0003_3() {
     Recorder first = new Recorder("crashes");
     Recorder second = new Recorder("crashes");
-    Stratum stratum = Notes.stratum(first);
+    Stratum stratum = NotesEngine.start(first);
     stratum.add(second);
-    stratum.publish(Notes.SAVED);
+    stratum.publish(NoteKey.SAVED);
     assertEquals(List.of(), first.keys());
-    assertEquals(List.of(Notes.SAVED), second.keys());
+    assertEquals(List.of("note.saved"), second.keys());
   }
 }

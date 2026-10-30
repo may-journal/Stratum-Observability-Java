@@ -13,29 +13,29 @@ public interface Plugin {
 
   /**
    * The event types this plugin takes, matched by name. An empty set, the default, accepts every
-   * event; otherwise the plugin takes only events that have one of these types.
+   * event; otherwise the plugin takes only events of one of these types.
    */
   default Set<EventType> acceptedTypes() {
     return Set.of();
   }
 
   /**
-   * Whether this plugin publishes the snapshot. Stratum asks before it calls {@link #publish}. By
-   * default, every snapshot when {@link #acceptedTypes} is empty, else those that share a type with
-   * it. Override it to filter on what the event carries.
+   * Whether this plugin publishes the snapshot. Stratum asks only for events of an accepted type,
+   * before it calls {@link #publish}. Every one by default; override it to filter on what the event
+   * carries, or to skip while the destination is unavailable.
    */
   default boolean shouldPublish(Snapshot snapshot) {
-    return Event.reaches(acceptedTypes(), snapshot.eventTypes());
+    return true;
   }
 
   /**
-   * Checks an event whose types this plugin accepts when its catalog or this plugin is added, so a
-   * bad setting fails then rather than when the event is published. Accepts every event by default.
+   * Checks an event of an accepted type when its catalog or this plugin is added, so a bad setting
+   * fails then rather than when the event is published. Accepts every event by default.
    *
    * @param key the key the event is published under
    * @param event the event, whose {@link Event#settings(Class)} holds its settings
    * @throws CatalogException when this plugin cannot send the event, from {@link
    *     CatalogException#invalidEvent}
    */
-  default void check(String key, Event event) throws CatalogException {}
+  default void check(CatalogKey key, Event event) {}
 }

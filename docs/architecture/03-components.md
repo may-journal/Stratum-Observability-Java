@@ -14,7 +14,7 @@ C4Component
 
     Container_Boundary(core, "3 stratum-core (stratum-core/src/main/java/stratum)") {
         Component(service, "4 Service", "Java", "stratum-core/src/main/java/stratum/Stratum.java")
-        Component(catalog, "5 Catalog", "Java", "stratum-core/src/main/java/stratum/Catalog.java, stratum-core/src/main/java/stratum/CatalogException.java, stratum-core/src/main/java/stratum/Event.java, stratum-core/src/main/java/stratum/Level.java, stratum-core/src/main/java/stratum/EventType.java, stratum-core/src/main/java/stratum/EventSettings.java")
+        Component(catalog, "5 Catalog", "Java", "stratum-core/src/main/java/stratum/Catalog.java, stratum-core/src/main/java/stratum/CatalogException.java, stratum-core/src/main/java/stratum/Event.java, stratum-core/src/main/java/stratum/Level.java, stratum-core/src/main/java/stratum/EventType.java, stratum-core/src/main/java/stratum/EventSettings.java, stratum-core/src/main/java/stratum/CatalogKey.java, stratum-core/src/main/java/stratum/CatalogField.java, stratum-core/src/main/java/stratum/BaseType.java")
         Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/stratum/Snapshot.java, stratum-core/src/main/java/stratum/Plugin.java")
     }
 
@@ -64,7 +64,7 @@ Numbers on nodes and letters on arrows match the callout table.
 | 2   | The root `pom.xml` lists the modules and pins Java 21, each module pom builds one module, and the Checkstyle config holds the thresholds. | An app depends only on the modules it uses. |
 | 3   | The core module, from `stratum-core/src/main/java`. | Catalogs, context and publishing, with no plugin of its own. |
 | 4   | `Stratum` holds catalogs, plugins, context and listeners behind one lock, and publishes. | Safe to call from any thread. |
-| 5   | `Catalog`, `CatalogException`, `Event`, `Level`, `EventType` and `EventSettings`. | An event names its category, level, allowed fields, types and settings. |
+| 5   | `Catalog`, `CatalogException`, `Event`, `Level`, `EventType`, `EventSettings`, `CatalogKey`, `CatalogField` and `BaseType`. | Each catalog entry names its type, description, id, level, fields and settings. |
 | 6   | `Snapshot` and the `Plugin` interface, with the types each plugin accepts. | Every plugin and listener reads one frozen value. |
 | 7   | The OpenTelemetry module, from `stratum-otel/src/main/java`. | Only apps that run OpenTelemetry pull in its API. |
 | 8   | `OpenTelemetryPlugin` emits each snapshot as a log record, with private fields hidden. | Events join the pipeline the app already runs. |

@@ -2,7 +2,9 @@
 
 ## Why
 
-My app publishes only the events I wrote down in a `stratum.Catalog`, so every event my team reads has one known meaning.
+My app publishes only the events I wrote down in a `stratum.Catalog`. Every event my team reads has one known meaning and one id.
+
+I name each event and field by a constant of my own enums, which implement `stratum.CatalogKey` and `stratum.CatalogField`. The compiler refuses a key or field typed as text.
 
 ## Measurement
 
@@ -25,24 +27,24 @@ published keys
 - 0001.3
     - Given Developer adds a catalog after start
         - When I publish one of its events
-            - Then my plugin receives it with that catalog's meaning
+            - Then my plugin receives it with that catalog's description
 - 0001.4
     - Given Developer removes a catalog
         - When I publish one of its events
             - Then my plugin receives nothing
 - 0001.5
-    - Given Developer has an event key with a space
-        - When I add its catalog
-            - Then adding fails and names the event
-- 0001.6
-    - Given Developer has a key another catalog holds
+    - Given Developer has a key whose text another catalog holds
         - When I add the catalog
             - Then adding fails and names the other catalog
+- 0001.6
+    - Given Developer has an id another event holds
+        - When I add its catalog
+            - Then adding fails and names the other event
 - 0001.7
-    - Given Developer has an event category with a space
-        - When I add its catalog
-            - Then adding fails and names the event
-- 0001.8
     - Given Developer has a field that is both public and private
-        - When I add its catalog
+        - When I add the catalog with it
             - Then adding fails and names the field
+- 0001.8
+    - Given Developer writes app code that publishes a key or a field as text
+        - When I compile the app
+            - Then the compiler refuses it

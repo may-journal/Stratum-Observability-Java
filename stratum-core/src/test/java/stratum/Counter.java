@@ -11,14 +11,14 @@ final class Counter extends TypedRecorder {
   }
 
   @Override
-  public void check(String key, Event event) throws CatalogException {
+  public void check(CatalogKey key, Event event) {
     CountSettings settings =
         event
             .settings(CountSettings.class)
             .orElseThrow(() -> CatalogException.invalidEvent(key, "it has no count settings"));
     if (!event.publicFields().contains(settings.field())) {
       throw CatalogException.invalidEvent(
-          key, "count field " + settings.field() + " is not public");
+          key, "count field " + settings.field().key() + " is not public");
     }
   }
 }
