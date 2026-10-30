@@ -94,4 +94,4 @@ Numbers on classes and letters on relationships match the callout table.
 
 ## Tests
 
-`mvn verify` runs `stratum-core/src/test/java`, one JUnit class per requirement doc. Each test starts a real `Stratum` for the notes product, publishes as an app does, and reads what the plugin or listener received. JaCoCo holds line and branch coverage of the module at 100%.
+`mvn verify` runs `stratum-core/src/test/java` and `stratum-otel/src/test/java`, one JUnit class per requirement doc. Each test starts a real `Stratum` for the notes product, publishes as an app does, and reads what the plugin or listener received. The OpenTelemetry tests read records from an in-memory exporter. JaCoCo holds line and branch coverage of each module at 100%.
