@@ -1,4 +1,4 @@
-package io.github.mayjournal.stratum;
+package stratum;
 
 /** Why Stratum refused a catalog: an event that cannot be published, or a key another holds. */
 public final class CatalogException extends Exception {

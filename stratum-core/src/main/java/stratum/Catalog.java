@@ -1,4 +1,4 @@
-package io.github.mayjournal.stratum;
+package stratum;
 
 import java.util.Map;
 
