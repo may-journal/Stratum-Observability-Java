@@ -18,8 +18,8 @@ C4Component
         Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/stratum/Snapshot.java, stratum-core/src/main/java/stratum/Plugin.java")
     }
 
-    Container_Boundary(otel, "7 stratum-otel (stratum-otel/src/main/java/io/github/mayjournal/stratum/otel)") {
-        Component(emitter, "8 OpenTelemetry plugin", "Java", "stratum-otel/src/main/java/io/github/mayjournal/stratum/otel/OpenTelemetryPlugin.java")
+    Container_Boundary(otel, "7 stratum-otel (stratum-otel/src/main/java/stratum/otel)") {
+        Component(emitter, "8 OpenTelemetry plugin", "Java", "stratum-otel/src/main/java/stratum/otel/OpenTelemetryPlugin.java")
     }
 
     System_Ext(provider, "9 App's LoggerProvider", "The OpenTelemetry SDK the app already runs, with its own exporter.")

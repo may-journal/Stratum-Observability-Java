@@ -1,8 +1,5 @@
-package io.github.mayjournal.stratum.otel;
+package stratum.otel;
 
-import io.github.mayjournal.stratum.Level;
-import io.github.mayjournal.stratum.Plugin;
-import io.github.mayjournal.stratum.Snapshot;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.common.AttributesBuilder;
@@ -12,6 +9,9 @@ import io.opentelemetry.api.logs.Severity;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import stratum.Level;
+import stratum.Plugin;
+import stratum.Snapshot;
 
 /**
  * Emits each snapshot as an OpenTelemetry log record through the app's own {@link LoggerProvider}.

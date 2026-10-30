@@ -1,13 +1,9 @@
-package io.github.mayjournal.stratum.otel;
+package stratum.otel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.mayjournal.stratum.CatalogException;
-import io.github.mayjournal.stratum.Notes;
-import io.github.mayjournal.stratum.Plugin;
-import io.github.mayjournal.stratum.Stratum;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.logs.Severity;
 import io.opentelemetry.sdk.logs.SdkLoggerProvider;
@@ -17,6 +13,10 @@ import io.opentelemetry.sdk.testing.exporter.InMemoryLogRecordExporter;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import stratum.CatalogException;
+import stratum.Notes;
+import stratum.Plugin;
+import stratum.Stratum;
 
 /** Requirement 0004: emitting log records. */
 class OpenTelemetryTests {
