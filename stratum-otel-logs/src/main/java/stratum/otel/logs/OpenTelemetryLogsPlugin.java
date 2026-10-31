@@ -1,4 +1,4 @@
-package stratum.otel;
+package stratum.otel.logs;
 
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
@@ -9,23 +9,26 @@ import io.opentelemetry.api.logs.Severity;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import stratum.EventType;
 import stratum.Level;
 import stratum.Plugin;
 import stratum.Snapshot;
 
 /**
- * Emits each snapshot as an OpenTelemetry log record through the app's own {@link LoggerProvider}.
- * The record's body is the event's description, its severity follows the event's level, and its
- * attributes carry the key, id, product, version, context and public fields in the clear. Private
- * fields appear by name only, with their values replaced by {@value #PRIVATE}.
+ * Emits each snapshot whose event has the {@link OpenTelemetryLogType#LOG} type as an OpenTelemetry
+ * log record through the app's own {@link LoggerProvider}. The record's body is the event's
+ * description, its severity follows the event's level, and its attributes carry the key, id,
+ * product, version, context and public fields in the clear. Private fields appear by name only,
+ * with their values replaced by {@value #PRIVATE}.
  *
  * <p>The plugin owns no exporter or endpoint. Where records go, and whether they leave the process
  * at all, is decided by the provider the app passes in.
  */
-public final class OpenTelemetryPlugin implements Plugin {
+public final class OpenTelemetryLogsPlugin implements Plugin {
 
   /** The name this plugin registers under. */
-  public static final String NAME = "opentelemetry";
+  public static final String NAME = "opentelemetry-logs";
 
   /** The value every private field carries in a record, in place of what a person wrote. */
   public static final String PRIVATE = "<private>";
@@ -55,13 +58,19 @@ public final class OpenTelemetryPlugin implements Plugin {
    *
    * @param provider the provider whose loggers receive every record; never null
    */
-  public OpenTelemetryPlugin(LoggerProvider provider) {
+  public OpenTelemetryLogsPlugin(LoggerProvider provider) {
     this.provider = Objects.requireNonNull(provider, "provider");
   }
 
   @Override
   public String name() {
     return NAME;
+  }
+
+  /** Takes only events with the {@link OpenTelemetryLogType#LOG} type. */
+  @Override
+  public Set<EventType> acceptedTypes() {
+    return Set.of(OpenTelemetryLogType.LOG);
   }
 
   @Override

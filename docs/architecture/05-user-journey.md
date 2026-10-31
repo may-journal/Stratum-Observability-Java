@@ -31,11 +31,11 @@ Numbers match the callout table.
 ```mermaid
 flowchart TB
     dev((1 Developer)):::persona
-    catalog(2 Write a catalog file<br/>Req 0001, 0005, 0008):::action
+    catalog(2 Write a catalog file<br/>Req 0001, 0005, 0008, 0009):::action
     plugins(3 Choose plugins<br/>Req 0003, 0005):::action
     publish(4 The app publishes<br/>Req 0001, 0002):::action
     snapshot[(5 Event frozen with context<br/>Req 0002, 0005)]:::system
-    plugin[6 Event at the plugin<br/>Req 0003, 0004, 0007]:::screen
+    plugin[6 Event at the plugin<br/>Req 0003, 0004, 0006, 0007]:::screen
 
     dev --> catalog
     catalog --> plugins
@@ -58,4 +58,4 @@ Numbers match the callout table.
 | 3   | Adds the plugins the app sends events to. | Action | Each plugin takes only the event types it accepts. |
 | 4   | A person uses the app, and its code publishes a key with an option for each field it fills. | Action | Events start from what a person does. |
 | 5   | Stratum freezes the event with its context and product. | System | Every plugin reads the same value. |
-| 6   | The developer reads the event where the plugin sent it, such as an OpenTelemetry log record or a text log line. | Screen | Private fields stay in the fields the plugin must keep private. |
+| 6   | The developer reads the event where the plugin sent it, such as an OpenTelemetry log record or metric, or a text log line. | Screen | Private fields stay in the fields the plugin must keep private. |
