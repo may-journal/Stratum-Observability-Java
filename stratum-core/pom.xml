@@ -16,14 +16,6 @@
   <name>Stratum core</name>
   <description>Catalogs, context, listeners and publishing, with no runtime dependency.</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <!-- Shares the test fixtures, such as the notes product, with the plugin modules' tests. -->

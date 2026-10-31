@@ -23,6 +23,7 @@
   <modules>
     <module>stratum-core</module>
     <module>stratum-otel</module>
+    <module>stratum-log</module>
   </modules>
 
   <properties>
@@ -42,8 +43,22 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>stratum</groupId>
+        <artifactId>stratum-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <!-- Every module tests with JUnit, so each pom need not repeat it. -->
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <pluginManagement>
