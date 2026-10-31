@@ -15,9 +15,9 @@ import stratum.Snapshot;
 
 /**
  * Emits each snapshot as an OpenTelemetry log record through the app's own {@link LoggerProvider}.
- * The record's body is the event's meaning, its severity follows the event's level, and its
- * attributes carry the key, category, product, version, context and public fields in the clear.
- * Private fields appear by name only, with their values replaced by {@value #PRIVATE}.
+ * The record's body is the event's description, its severity follows the event's level, and its
+ * attributes carry the key, id, product, version, context and public fields in the clear. Private
+ * fields appear by name only, with their values replaced by {@value #PRIVATE}.
  *
  * <p>The plugin owns no exporter or endpoint. Where records go, and whether they leave the process
  * at all, is decided by the provider the app passes in.
@@ -33,8 +33,8 @@ public final class OpenTelemetryPlugin implements Plugin {
   /** The event's catalog key. */
   public static final AttributeKey<String> KEY = AttributeKey.stringKey("stratum.key");
 
-  /** The event's category. */
-  public static final AttributeKey<String> CATEGORY = AttributeKey.stringKey("stratum.category");
+  /** The event's reference id. */
+  public static final AttributeKey<Long> ID = AttributeKey.longKey("stratum.id");
 
   /** The product the service was started for. */
   public static final AttributeKey<String> PRODUCT = AttributeKey.stringKey("stratum.product");
@@ -74,7 +74,7 @@ public final class OpenTelemetryPlugin implements Plugin {
     logger
         .logRecordBuilder()
         .setTimestamp(snapshot.time())
-        .setBody(snapshot.meaning())
+        .setBody(snapshot.description())
         .setSeverity(severity(snapshot.level()))
         .setSeverityText(snapshot.level().name())
         .setAllAttributes(attributes(snapshot))
@@ -94,7 +94,7 @@ public final class OpenTelemetryPlugin implements Plugin {
     AttributesBuilder builder =
         Attributes.builder()
             .put(KEY, snapshot.key())
-            .put(CATEGORY, snapshot.category())
+            .put(ID, (long) snapshot.id())
             .put(PRODUCT, snapshot.product())
             .put(VERSION, snapshot.version());
     snapshot.context().forEach(builder::put);
