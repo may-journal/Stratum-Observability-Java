@@ -16,14 +16,10 @@ import stratum.Plugin;
 import stratum.Snapshot;
 
 /**
- * Emits each snapshot whose event has the {@link OpenTelemetryLogType#LOG} type as an OpenTelemetry
- * log record through the app's own {@link LoggerProvider}. The record's body is the event's
- * description, its severity follows the event's level, and its attributes carry the key, id,
- * product, version, context and public fields in the clear. Private fields appear by name only,
- * with their values replaced by {@value #PRIVATE}.
- *
- * <p>The plugin owns no exporter or endpoint. Where records go, and whether they leave the process
- * at all, is decided by the provider the app passes in.
+ * Emits each {@link OpenTelemetryLogType#LOG} snapshot as a log record through the app's {@link
+ * LoggerProvider}, which alone decides where records go. The body is the description, and
+ * attributes carry the key, id, product, version, context and fields, with private values shown as
+ * {@value #PRIVATE}.
  */
 public final class OpenTelemetryLogsPlugin implements Plugin {
 
@@ -42,7 +38,7 @@ public final class OpenTelemetryLogsPlugin implements Plugin {
   /** The product the service was started for. */
   public static final AttributeKey<String> PRODUCT = AttributeKey.stringKey("stratum.product");
 
-  /** The product's version. */
+  /** The product's version, as the service was started with it. */
   public static final AttributeKey<String> VERSION = AttributeKey.stringKey("stratum.version");
 
   /**

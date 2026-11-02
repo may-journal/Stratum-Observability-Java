@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A named, versioned set of events by key, which an app declares once as a constant in its own
- * file, such as {@code NotesCatalog.CATALOG}.
+ * A named, versioned set of events by key, declared once by an app as a constant.
  *
- * @param name the catalog's name, unique in one service
- * @param version the catalog's version, as the app numbers it
- * @param items each event by the key the app publishes it under
+ * @param name its name @param version its version @param items each event by its key
  */
 public record Catalog(String name, String version, Map<CatalogKey, Event> items) {
 

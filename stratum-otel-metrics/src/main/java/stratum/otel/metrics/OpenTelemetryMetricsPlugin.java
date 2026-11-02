@@ -19,16 +19,9 @@ import stratum.Plugin;
 import stratum.Snapshot;
 
 /**
- * Records each snapshot whose event has the {@link MetricType#METRIC} type through the app's own
- * {@link MeterProvider}. The event's {@link MetricSettings} name the instrument, its name, unit and
- * description, the public field that holds the value, and the public fields that become attributes.
- * A counter with no value field adds one per event. A value that is missing or is not a number
- * records nothing. The plugin refuses a catalog whose metric event has no settings, or settings
- * that name a field the event does not hold as public, so every snapshot it takes carries valid
- * settings.
- *
- * <p>The plugin owns no reader or exporter. Where measurements go, and whether they leave the
- * process at all, is decided by the provider the app passes in.
+ * Records each {@link MetricType#METRIC} snapshot through the app's {@link MeterProvider}, which
+ * alone decides where measurements go. The event's {@link MetricSettings} name the instrument, and
+ * the plugin refuses a catalog whose metric event lacks valid settings.
  */
 public final class OpenTelemetryMetricsPlugin implements Plugin {
 
@@ -43,7 +36,7 @@ public final class OpenTelemetryMetricsPlugin implements Plugin {
   /**
    * A plugin that records through {@code provider}, whose readers and exporters the app configures.
    *
-   * @param provider the provider whose meters receive every measurement; never null
+   * @param provider the provider whose meters receive every measurement; never null.
    */
   public OpenTelemetryMetricsPlugin(MeterProvider provider) {
     this.provider = Objects.requireNonNull(provider, "provider");

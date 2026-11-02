@@ -47,8 +47,8 @@ class LogTests {
   }
 
   /**
-   * A person acts in the notes app, whose code {@code publishes} through the log plugin; the lines
-   * the logger named {@code category} receives while it does.
+   * A person acts in the notes app, whose code {@code publishes} through the log plugin. It returns
+   * the lines the logger named {@code category} receives meanwhile.
    */
   static List<LogRecord> lines(String category, Consumer<Stratum> publishes) {
     return lines(start(), category, publishes);

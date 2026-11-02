@@ -12,16 +12,17 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
 /**
- * Compiles app code against Stratum and the notes catalog, as the app's own build would, to show
- * which mistakes the catalog stops at compile time.
+ * Compiles app code against Stratum and the notes catalog, as the app's build would. It shows which
+ * mistakes the catalog stops at compile time.
  */
 final class AppBuild {
 
   private AppBuild() {}
 
   /**
-   * The compiler's errors for an app class whose one method runs {@code statement} with a {@code
-   * stratum} service in scope, or none when it compiles. The classes it writes go to {@code out}.
+   * The compiler's errors for an app class whose method runs {@code statement}, or none when it
+   * compiles. The class has a {@code stratum} service in scope and writes its classes to {@code
+   * out}.
    */
   static List<String> errors(Path out, String statement) throws URISyntaxException {
     String source =
