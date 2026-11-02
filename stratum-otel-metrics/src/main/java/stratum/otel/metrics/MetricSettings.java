@@ -7,16 +7,8 @@ import stratum.EventType;
 
 /**
  * The metric a catalog entry of the {@link MetricType#METRIC} type records, attached with {@code
- * Event.settings}. It names fields by the app's {@link CatalogField} constants, and each must be
- * one of the event's public fields, so a private field never becomes a metric value or attribute.
- *
- * @param kind the kind of instrument that records the value
- * @param name the metric's name, such as {@code notes.sync.duration}
- * @param unit the unit of the value, such as {@code ms}
- * @param description what the metric measures, in words a teammate understands
- * @param valueField the public field whose value is recorded, or null for a counter that adds one
- *     per event
- * @param attributeFields the public fields that become the metric's attributes
+ * Event.settings}. Each field it names must be public, and a null value field makes a counter that
+ * adds one per event.
  */
 public record MetricSettings(
     MetricKind kind,

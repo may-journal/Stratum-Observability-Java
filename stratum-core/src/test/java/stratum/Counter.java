@@ -1,7 +1,7 @@
 package stratum;
 
 /**
- * A recorder that accepts only {@link CountType#COUNT} events, and refuses one whose {@link
+ * A recorder that accepts only {@link CountType#COUNT} events. It refuses one whose {@link
  * CountSettings} are missing or name a field that is not public.
  */
 final class Counter extends TypedRecorder {
