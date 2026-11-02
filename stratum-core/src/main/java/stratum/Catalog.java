@@ -4,11 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A named, versioned set of events by key, declared once by an app as a constant.
- *
- * @param name its name @param version its version @param items each event by its key
- */
+/** A named, versioned set of events by key, declared once by an app as a constant. */
 public record Catalog(String name, String version, Map<CatalogKey, Event> items) {
 
   /** Copies the items, so a later change to the caller's map never reaches the catalog. */

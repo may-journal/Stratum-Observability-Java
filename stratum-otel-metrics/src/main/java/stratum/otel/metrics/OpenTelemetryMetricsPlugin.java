@@ -19,9 +19,9 @@ import stratum.Plugin;
 import stratum.Snapshot;
 
 /**
- * Records each {@link MetricType#METRIC} snapshot through the app's {@link MeterProvider}, which
- * alone decides where measurements go. The event's {@link MetricSettings} name the instrument, and
- * the plugin refuses a catalog whose metric event lacks valid settings.
+ * Records each {@link MetricType#METRIC} snapshot through the app's {@link MeterProvider}. A
+ * counter with no value field adds one per event, and a missing or non-numeric value records
+ * nothing.
  */
 public final class OpenTelemetryMetricsPlugin implements Plugin {
 

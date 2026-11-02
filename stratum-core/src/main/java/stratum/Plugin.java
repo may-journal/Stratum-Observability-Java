@@ -5,7 +5,7 @@ import java.util.Set;
 /** A destination for published events, such as a crash reporter or an analytics backend. */
 public interface Plugin {
 
-  /** Names the plugin, so adding a second plugin with the same name replaces the first. */
+  /** Names the plugin; a second plugin added with the same name replaces the first. */
   String name();
 
   /** Sends the snapshot to the plugin's destination. */
@@ -29,11 +29,8 @@ public interface Plugin {
   }
 
   /**
-   * Checks an event of an accepted type when its catalog or this plugin is added, so a bad setting
-   * fails early.
-   *
-   * @param key the event's key @param event the event checked @throws CatalogException when the
-   *     plugin cannot send it
+   * Checks an event of an accepted type when its catalog or this plugin is added. It throws {@link
+   * CatalogException} when the plugin cannot send the event.
    */
   default void check(CatalogKey key, Event event) {}
 }
