@@ -13,12 +13,9 @@ import stratum.Plugin;
 import stratum.Snapshot;
 
 /**
- * Writes each snapshot whose event has the {@link LogType#LOG} type as one text line through {@link
- * System.Logger}, so it follows whatever logging backend the app runs. The logger is named for the
- * product, and the line's level follows the event's level.
- *
- * <p>The line is the event's key, then its context and public fields as {@code name=value} pairs in
- * name order. Private fields appear by name only, with the value {@value #PRIVATE}.
+ * Writes each {@link LogType#LOG} snapshot as one line through {@link System.Logger}, named for the
+ * product, at the event's level. The line is the key, then context and public fields as {@code
+ * name=value} pairs, with private values shown as {@value #PRIVATE}.
  */
 public final class LogPlugin implements Plugin {
 

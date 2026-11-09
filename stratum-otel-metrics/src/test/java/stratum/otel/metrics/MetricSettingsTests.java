@@ -16,8 +16,8 @@ import stratum.Stratum;
 class MetricSettingsTests {
 
   /**
-   * The message adding, to an engine with the metrics plugin, a Sharing catalog whose shared note
-   * has a public {@code to}, a private {@code message}, and {@code settings}, or none when null.
+   * The message from adding a Sharing catalog to an engine with the metrics plugin, or none. The
+   * catalog's shared note has a public {@code to}, a private {@code message}, and {@code settings}.
    */
   static String refusal(MetricSettings settings) {
     Event shared =
