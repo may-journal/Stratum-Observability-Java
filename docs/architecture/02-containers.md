@@ -25,12 +25,10 @@ C4Container
 
     Person(p, "Person", "Human or agent actor")
     System_Boundary(b, "System boundary") {
-        Container(c, "Container", "Tech", "Runnable or deployable unit")
     }
     System_Ext(e, "External", "Outside our boundary")
 
     UpdateElementStyle(p, $bgColor="#334155", $borderColor="#1e293b", $fontColor="#ffffff")
-    UpdateElementStyle(c, $bgColor="#0f766e", $borderColor="#115e59", $fontColor="#ffffff")
     UpdateElementStyle(e, $bgColor="#64748b", $borderColor="#475569", $fontColor="#ffffff")
 ```
 
