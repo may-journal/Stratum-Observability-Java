@@ -8,17 +8,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * One catalog item: the event an app publishes under one key. A catalog declares each event in one
- * expression, such as {@code Event.of(BaseType.BASE, "A person saved a note",
- * 2).publicFields(NoteField.WORDS)}. Each method returns a new event, so it never changes.
- *
- * @param eventType the type that decides the plugins the event reaches
- * @param description what happened, in words a teammate reading the event understands
- * @param id the reference id that queries find the event by, unique in one service
- * @param level how serious the event is
- * @param publicFields fields whose values may be shown anywhere, such as a count
- * @param privateFields fields whose values a plugin must keep private, such as a title
- * @param settings the plugin-owned attributes for the event's type, or null when it has none
+ * One catalog item: the event an app publishes under one key, such as {@code
+ * Event.of(BaseType.BASE, "A person saved a note", 2)}. Each method returns a new event.
  */
 public record Event(
     EventType eventType,

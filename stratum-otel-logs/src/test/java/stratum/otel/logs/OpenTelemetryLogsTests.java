@@ -47,7 +47,7 @@ class OpenTelemetryLogsTests {
 
   /**
    * A person acts in the notes app, whose code {@code publishes} through an OpenTelemetry plugin
-   * wired to the app's own in-memory exporter; the one record that exporter holds after.
+   * wired to the app's in-memory exporter. It returns the one record that exporter holds after.
    */
   static LogRecordData record(Consumer<Stratum> publishes) {
     App app = App.start();

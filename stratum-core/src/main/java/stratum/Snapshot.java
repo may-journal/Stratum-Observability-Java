@@ -5,21 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * One published event, frozen at the moment the app published it, so a later change to the context
- * never reaches it.
- *
- * @param key the published key's text, such as {@code "note.saved"}
- * @param id the event's reference id, from its catalog
- * @param description the event's description, from its catalog
- * @param eventType the event's type, from its catalog
- * @param level the event's level, from its catalog
- * @param settings the event's plugin-owned settings, from its catalog, or null
- * @param publicFields the values the app passed for the event's public fields, by field key
- * @param privateFields the values the app passed for the event's private fields, by field key
- * @param context the context the app had set when it published
- * @param time the moment the app published
- * @param product the product the service was started for
- * @param version the product's version
+ * One published event, frozen when the app published it, so a later change to the context never
+ * reaches it. It holds the catalog's values, the field values the app passed, and the context.
  */
 public record Snapshot(
     String key,
