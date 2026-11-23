@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -151,16 +150,15 @@ public final class Stratum {
     final List<Consumer<Snapshot>> heard;
     final List<Plugin> targets;
     synchronized (lock) {
-      Event event =
+      Catalog holder =
           catalogs.values().stream()
-              .map(catalog -> catalog.items().get(key))
-              .filter(Objects::nonNull)
+              .filter(catalog -> catalog.items().containsKey(key))
               .findFirst()
               .orElse(null);
-      if (event == null) {
+      if (holder == null) {
         return false;
       }
-      snapshot = snapshot(key, event, given);
+      snapshot = snapshot(key, holder, given);
       heard = List.copyOf(listeners);
       targets = List.copyOf(plugins);
     }
@@ -169,7 +167,8 @@ public final class Stratum {
     return true;
   }
 
-  private Snapshot snapshot(CatalogKey key, Event event, Map<CatalogField, String> given) {
+  private Snapshot snapshot(CatalogKey key, Catalog holder, Map<CatalogField, String> given) {
+    Event event = holder.items().get(key);
     return new Snapshot(
         key.key(),
         event.id(),
@@ -182,6 +181,8 @@ public final class Stratum {
         context,
         Instant.now(),
         productName,
-        productVersion);
+        productVersion,
+        holder.name(),
+        holder.version());
   }
 }

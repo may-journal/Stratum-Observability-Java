@@ -32,7 +32,7 @@ The logs plugin gets a logger named for the product, at the product's version. E
 | Timestamp | The moment the app published. |
 | Severity | The event's level, from the table below. |
 | Severity text | The level's name, such as `ERROR`. |
-| Attributes | `stratum.key`, `stratum.id`, `stratum.product`, `stratum.version`, the context and the public fields. |
+| Attributes | `stratum.key`, `stratum.id`, `stratum.product`, `stratum.version`, `stratum.catalog`, `stratum.catalog.version`, the context and the public fields. |
 | Private fields | Their names, each with the value `<private>`. |
 
 | Level | Severity |

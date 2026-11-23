@@ -40,3 +40,7 @@ published events
     - Given Developer gave an event an id and a level
         - When I publish the event
             - Then it carries that id and level
+- 0002.7
+    - Given Developer named the catalog and gave it a version
+        - When I publish an event that catalog holds
+            - Then the event names that catalog and its version

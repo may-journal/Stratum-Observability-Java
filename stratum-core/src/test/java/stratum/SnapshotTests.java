@@ -69,4 +69,12 @@ class SnapshotTests {
     assertEquals(2, snapshot.id());
     assertEquals(Level.ERROR, snapshot.level());
   }
+
+  @Test
+  void test0002_7() {
+    Recorder recorder = new Recorder();
+    NotesEngine.start(recorder).publish(NoteKey.SAVED);
+    Snapshot snapshot = recorder.snapshots().get(0);
+    assertEquals(List.of("Notes", "1.0"), List.of(snapshot.catalog(), snapshot.catalogVersion()));
+  }
 }

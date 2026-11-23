@@ -42,3 +42,7 @@ events with the log type published through the OpenTelemetry logs plugin
     - Given Developer has an event of the metric type
         - When I open a note
             - Then my exporter holds no record
+- 0004.8
+    - Given Developer named the catalog and gave it a version
+        - When I emit an event that catalog holds
+            - Then the record's attributes name that catalog and its version

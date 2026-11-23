@@ -44,6 +44,8 @@ classDiagram
         +settings(Class~T~) Optional~T~
         +context
         +time
+        +catalog
+        +catalogVersion
     }
     class Plugin["7 Plugin"] {
         +name() String
