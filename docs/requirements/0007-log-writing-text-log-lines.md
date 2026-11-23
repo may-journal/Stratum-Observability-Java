@@ -60,6 +60,6 @@ events with the log type published through the log plugin
         - When a person saves a note with no place
             - Then the line shows the field with empty quotes
 - 0007.12
-    - Given Developer passes a value that holds a no-break space
-        - When a person saves a note at the front desk
-            - Then the line shows the value in double quotes
+    - Given Developer passes a no-break space
+        - When a person saves a note
+            - Then the line quotes the value
