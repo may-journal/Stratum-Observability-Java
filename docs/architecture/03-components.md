@@ -9,7 +9,7 @@ C4Component
     Person(dev, "1 Developer")
 
     Container_Boundary(build, "Build") {
-        Component(poms, "2 Maven build", "XML", "pom.xml, stratum-core/pom.xml, stratum-otel-parent/pom.xml, stratum-otel-logs/pom.xml, stratum-otel-metrics/pom.xml, stratum-log/pom.xml, config/checkstyle/checkstyle.xml")
+        Component(poms, "2 Maven build", "XML", "pom.xml, stratum-core/pom.xml, stratum-otel-parent/pom.xml, stratum-otel-logs/pom.xml, stratum-otel-metrics/pom.xml, stratum-log/pom.xml, stratum-jfr/pom.xml, config/checkstyle/checkstyle.xml")
     }
 
     Container_Boundary(core, "3 stratum-core (stratum-core/src/main/java/stratum)") {
@@ -36,6 +36,12 @@ C4Component
 
     System_Ext(backend, "15 App's logging", "java.util.logging, or the SLF4J or Log4j 2 bridge the app adds behind System.Logger.")
 
+    Container_Boundary(jfr, "16 stratum-jfr (stratum-jfr/src/main/java/stratum/jfr)") {
+        Component(flight, "17 Flight Recorder plugin", "Java", "stratum-jfr/src/main/java/stratum/jfr/JfrPlugin.java, stratum-jfr/src/main/java/stratum/jfr/JfrType.java, stratum-jfr/src/main/java/stratum/jfr/FlightEvent.java")
+    }
+
+    System_Ext(recorder_jdk, "18 JDK Flight Recorder", "The recorder built into the JVM, read with JDK Mission Control.")
+
     Rel(dev, poms, "A")
     Rel(dev, service, "B")
     Rel(service, catalog, "C")
@@ -47,6 +53,8 @@ C4Component
     Rel(recorder, meters, "I")
     Rel(writer, snapshot, "J")
     Rel(writer, backend, "K")
+    Rel(flight, snapshot, "L")
+    Rel(flight, recorder_jdk, "M")
 
     UpdateElementStyle(dev, $bgColor="#334155", $borderColor="#1e293b", $fontColor="#ffffff")
     UpdateElementStyle(poms, $bgColor="#b45309", $borderColor="#92400e", $fontColor="#ffffff")
@@ -59,6 +67,8 @@ C4Component
     UpdateElementStyle(meters, $bgColor="#64748b", $borderColor="#475569", $fontColor="#ffffff")
     UpdateElementStyle(writer, $bgColor="#b45309", $borderColor="#92400e", $fontColor="#ffffff")
     UpdateElementStyle(backend, $bgColor="#64748b", $borderColor="#475569", $fontColor="#ffffff")
+    UpdateElementStyle(flight, $bgColor="#b45309", $borderColor="#92400e", $fontColor="#ffffff")
+    UpdateElementStyle(recorder_jdk, $bgColor="#64748b", $borderColor="#475569", $fontColor="#ffffff")
 ```
 
 ```mermaid
@@ -95,6 +105,9 @@ Numbers on nodes and letters on arrows match the callout table.
 | 13  | The text log module, from `stratum-log/src/main/java`. | It needs nothing beyond the JDK. |
 | 14  | `LogPlugin` accepts the `LogType.LOG` event type and writes each such snapshot as one text line, with private fields hidden. | A team sees its events with no server. |
 | 15  | The backend behind `System.Logger` that the app runs. | The app decides where lines go. |
+| 16  | The Flight Recorder module, from `stratum-jfr/src/main/java`. | It needs nothing beyond the JDK. |
+| 17  | `JfrPlugin` accepts the `JfrType.JFR` event type and commits each such snapshot as one `FlightEvent`, with private fields hidden. | Events sit beside the JVM's own. |
+| 18  | The recorder inside the JVM, whose recordings the app or an operator starts. | Nothing is built while no recording runs. |
 | A   | The app adds the modules to its build. | A Maven or Gradle dependency. |
 | B   | The app adds catalogs and plugins, and publishes. | One service per product. |
 | C   | The service and each plugin check every catalog it adds. | A bad key or setting fails when it is added, not when it is used. |
@@ -106,3 +119,5 @@ Numbers on nodes and letters on arrows match the callout table.
 | I   | The metrics plugin records the value through the app's meters. | A value that is not a number records nothing. |
 | J   | The text log plugin reads each snapshot it accepts. | Its line holds the same frozen value. |
 | K   | The text log plugin writes the line to the logger named for the product. | Lines sit beside the app's own. |
+| L   | The Flight Recorder plugin reads each snapshot it accepts. | Its event holds the same frozen value. |
+| M   | The Flight Recorder plugin commits the event to the running recordings. | The operator decides when to record. |
