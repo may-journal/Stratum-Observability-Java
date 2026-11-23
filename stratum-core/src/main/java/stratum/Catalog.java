@@ -18,4 +18,23 @@ public record Catalog(String name, String version, Map<CatalogKey, Event> items)
         .sorted(Comparator.comparing(item -> item.getKey().key()))
         .toList();
   }
+
+  /**
+   * Records each key and id as this catalog's, in key order.
+   *
+   * @throws CatalogException for a key or id that {@code keys} or {@code ids} already holds
+   */
+  void claim(Map<String, String> keys, Map<Integer, String> ids) {
+    for (Map.Entry<CatalogKey, Event> item : sorted()) {
+      CatalogKey key = item.getKey();
+      String owner = keys.putIfAbsent(key.key(), name);
+      if (owner != null) {
+        throw CatalogException.duplicateKey(key, owner);
+      }
+      String other = ids.putIfAbsent(item.getValue().id(), key.key());
+      if (other != null) {
+        throw CatalogException.duplicateId(key, item.getValue().id(), other);
+      }
+    }
+  }
 }

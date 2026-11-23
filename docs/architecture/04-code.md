@@ -8,9 +8,10 @@ classDiagram
         +add(Catalog)
         +removeCatalog(String)
         +add(Plugin)
+        +removePlugin(String)
         +setContext(Map.Entry~CatalogField, String~)
         +clearContext(CatalogField)
-        +addListener(Consumer~Snapshot~)
+        +addListener(Consumer~Snapshot~) Listening
         +publish(CatalogKey, Map.Entry~CatalogField, String~...) boolean
     }
     class Catalog["2 Catalog"] {
@@ -66,6 +67,9 @@ classDiagram
     class BaseType["12 BaseType"] {
         BASE
     }
+    class Listening["13 Listening"] {
+        +close()
+    }
 
     Stratum --> Catalog : A
     Stratum --> CatalogException : B
@@ -88,6 +92,8 @@ classDiagram
     Event --> CatalogField : S
     Stratum --> CatalogField : T
     EventType <|.. BaseType : U
+    Stratum --> Listening : V
+    Catalog --> CatalogException : W
 
     style Stratum fill:#6d28d9,stroke:#4c1d95,color:#ffffff
     style Catalog fill:#6d28d9,stroke:#4c1d95,color:#ffffff
@@ -101,6 +107,7 @@ classDiagram
     style CatalogKey fill:#6d28d9,stroke:#4c1d95,color:#ffffff
     style CatalogField fill:#6d28d9,stroke:#4c1d95,color:#ffffff
     style BaseType fill:#6d28d9,stroke:#4c1d95,color:#ffffff
+    style Listening fill:#6d28d9,stroke:#4c1d95,color:#ffffff
 ```
 
 ```mermaid
@@ -135,12 +142,13 @@ Numbers on classes and letters on relationships match the callout table.
 | 10  | `CatalogKey` in [CatalogKey.java](../../stratum-core/src/main/java/stratum/CatalogKey.java), which the app's key enum implements, each constant with its key text. | A key typed as text does not compile, and renaming a constant never changes telemetry. |
 | 11  | `CatalogField` in [CatalogField.java](../../stratum-core/src/main/java/stratum/CatalogField.java), which the app's field enum implements, each constant with its field text. | A field typed as text does not compile. |
 | 12  | `BaseType` in [BaseType.java](../../stratum-core/src/main/java/stratum/BaseType.java), the built-in event type. | Events that need no plugin attributes use `BASE`. |
+| 13  | `Listening` in [Listening.java](../../stratum-core/src/main/java/stratum/Listening.java), the handle `addListener` returns. | Closing it removes the listener. |
 | A   | The engine holds catalogs and checks each one it adds. | Every key and id is checked once. |
 | B   | A bad event, or a key or id another event holds, throws a `CatalogException`. | The developer reads which event to fix. |
 | C   | A catalog maps each key to its event. | One entry per key. |
 | D   | An event has one level. | Plugins read it to filter and to map. |
 | E   | Publishing builds one snapshot. | Listeners and plugins share it. |
-| F   | The engine hands the snapshot to each plugin that accepts its type and whose `shouldPublish` returns true. | A plugin can take only some events. |
+| F   | The engine hands the snapshot to each plugin that accepts its type and whose `shouldPublish` returns true. A plugin that throws is logged, and the rest still run. | A plugin can take only some events, and one failure stays its own. |
 | G   | A plugin receives snapshots. | It never sees the engine's state. |
 | H   | An event has the type that decides the plugins it reaches. | An empty accepted list takes every type. |
 | I   | An event may carry settings for its type. | Settings for another type fail when the catalog is added. |
@@ -156,6 +164,8 @@ Numbers on classes and letters on relationships match the callout table.
 | S   | An event declares its public and private fields by field constant. | The catalog lists every field once. |
 | T   | The engine takes values and context as entries of a field constant and its text value. | A field typed as text does not compile. |
 | U   | `BaseType` is an event type. | Its name matches any module's type named `BASE`. |
+| V   | Adding a listener returns its handle. | A screen stops listening when it closes. |
+| W   | A catalog refuses a key or id that another event holds. | The refusal names both events. |
 
 ## Tests
 
