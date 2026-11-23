@@ -72,13 +72,16 @@ public final class LogPlugin implements Plugin {
 
   /**
    * A value as a line shows it, following the logfmt convention. A plain value stays bare; an empty
-   * one, or one with a space, {@code =}, quote, backslash or control character, is quoted.
+   * one, or one with any space, {@code =}, quote, backslash or control character, is quoted.
    */
   static String value(String value) {
     String body =
         value.chars().mapToObj(each -> escaped((char) each)).collect(Collectors.joining());
     boolean plain =
-        body.equals(value) && !value.isEmpty() && value.indexOf(' ') < 0 && value.indexOf('=') < 0;
+        body.equals(value)
+            && !value.isEmpty()
+            && value.chars().noneMatch(Character::isSpaceChar)
+            && value.indexOf('=') < 0;
     return plain ? value : '"' + body + '"';
   }
 

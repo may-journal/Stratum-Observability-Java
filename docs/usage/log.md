@@ -92,7 +92,7 @@ note.saved screen=Today title=<private> words=120
 - Context and public fields follow as `name=value` pairs, in name order.
 - Private fields appear by name only, with the value `<private>`.
 - A plain value such as `120` is written bare. An empty value is written as `""`.
-- A value with a space, `=`, a quote, a backslash or a control character is written in double quotes.
+- A value with any Unicode space, `=`, a quote, a backslash or a control character is written in double quotes.
 - Inside quotes, `"` and `\` gain a backslash, and a line break or tab reads as `\n`, `\r` or `\t`.
 - So each event is always one line, as the logfmt convention has it, and log tools can split its pairs.
 

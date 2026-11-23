@@ -166,4 +166,9 @@ class LogTests {
   void test0007_11() {
     assertEquals("note.saved place=\"\" screen=Today", saved(""));
   }
+
+  @Test
+  void test0007_12() {
+    assertEquals("note.saved place=\"front\u00a0desk\" screen=Today", saved("front\u00a0desk"));
+  }
 }
