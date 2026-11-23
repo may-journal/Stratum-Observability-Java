@@ -16,7 +16,7 @@ final class JournalCatalog {
           Map.of(
               JournalKey.SAVED,
               Event.of(LogType.LOG, "A person saved a note", 1)
-                  .publicFields(JournalField.WORDS)
+                  .publicFields(JournalField.WORDS, JournalField.PLACE)
                   .privateFields(JournalField.TITLE),
               JournalKey.FAILED,
               Event.of(LogType.LOG, "The notes failed to sync", 2).level(Level.ERROR),
