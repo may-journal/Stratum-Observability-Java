@@ -6,6 +6,7 @@ import stratum.CatalogField;
 enum JournalField implements CatalogField {
   WORDS("words"),
   TITLE("title"),
+  PLACE("place"),
   SOURCE("source"),
   SCREEN("screen");
 

@@ -42,3 +42,20 @@ events with the log type published through the log plugin
     - Given Developer adds the log plugin a second time
         - When a person saves a note
             - Then the log holds one line
+
+- 0007.8
+    - Given Developer passes a value that holds a space
+        - When a person saves a note at the front desk
+            - Then the line shows the value in double quotes
+- 0007.9
+    - Given Developer passes a value that holds a line break
+        - When a person saves a note with a pasted place
+            - Then the log holds one line with the break escaped
+- 0007.10
+    - Given Developer passes a value that holds quotes, signs and control characters
+        - When a person saves a note with a pasted place
+            - Then the line escapes each one inside the quotes
+- 0007.11
+    - Given Developer passes an empty value
+        - When a person saves a note with no place
+            - Then the line shows the field with empty quotes

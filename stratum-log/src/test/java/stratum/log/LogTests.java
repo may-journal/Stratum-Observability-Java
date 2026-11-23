@@ -79,6 +79,12 @@ class LogTests {
     return records.get(0);
   }
 
+  /** The line the log holds when a person saves a note at {@code place}. */
+  static String saved(String place) {
+    return line("Notes", each -> each.publish(JournalKey.SAVED, entry(JournalField.PLACE, place)))
+        .getMessage();
+  }
+
   @Test
   void test0007_1() {
     LogRecord record = line("Notes", stratum -> stratum.publish(JournalKey.SAVED));
@@ -135,5 +141,29 @@ class LogTests {
     Stratum stratum = start();
     stratum.add(new LogPlugin());
     assertEquals(1, lines(stratum, "Notes", each -> each.publish(JournalKey.SAVED)).size());
+  }
+
+  @Test
+  void test0007_8() {
+    assertEquals("note.saved place=\"Front desk\" screen=Today", saved("Front desk"));
+  }
+
+  @Test
+  void test0007_9() {
+    assertEquals(
+        "note.saved place=\"desk\\nnote.deleted\" screen=Today", saved("desk\nnote.deleted"));
+  }
+
+  @Test
+  void test0007_10() {
+    String place = "a=b \"c\" d\\e\tf\rg\u0007h\u2028i\u2029j";
+    String shown = "\"a=b \\\"c\\\" d\\\\e\\tf\\rg\\u0007h\\u2028i\\u2029j\"";
+    assertEquals("note.saved place=" + shown + " screen=Today", saved(place));
+    assertEquals("note.saved place=\"a=b\" screen=Today", saved("a=b"));
+  }
+
+  @Test
+  void test0007_11() {
+    assertEquals("note.saved place=\"\" screen=Today", saved(""));
   }
 }

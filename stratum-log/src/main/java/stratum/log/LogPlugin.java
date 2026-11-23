@@ -15,7 +15,7 @@ import stratum.Snapshot;
 /**
  * Writes each {@link LogType#LOG} snapshot as one line through {@link System.Logger}, named for the
  * product, at the event's level. The line is the key, then context and public fields as {@code
- * name=value} pairs, with private values shown as {@value #PRIVATE}.
+ * name=value} pairs, quoted where needed, with private values shown as {@value #PRIVATE}.
  */
 public final class LogPlugin implements Plugin {
 
@@ -27,6 +27,10 @@ public final class LogPlugin implements Plugin {
 
   /** The logger level for each event level: notice reads as info, and a fault as an error. */
   private static final Map<Level, Logger.Level> LEVELS = levels();
+
+  /** How a quoted value shows the characters that would end its quotes or its line. */
+  private static final Map<Character, String> ESCAPES =
+      Map.of('"', "\\\"", '\\', "\\\\", '\n', "\\n", '\r', "\\r", '\t', "\\t");
 
   /** A plugin that writes through the loggers {@link System#getLogger(String)} returns. */
   public LogPlugin() {}
@@ -62,8 +66,34 @@ public final class LogPlugin implements Plugin {
     snapshot.privateFields().keySet().forEach(name -> fields.put(name, PRIVATE));
     return Stream.concat(
             Stream.of(snapshot.key()),
-            fields.entrySet().stream().map(field -> field.getKey() + "=" + field.getValue()))
+            fields.entrySet().stream().map(field -> field.getKey() + "=" + value(field.getValue())))
         .collect(Collectors.joining(" "));
+  }
+
+  /**
+   * A value as a line shows it, following the logfmt convention. A plain value stays bare; an empty
+   * one, or one with a space, {@code =}, quote, backslash or control character, is quoted.
+   */
+  static String value(String value) {
+    String body =
+        value.chars().mapToObj(each -> escaped((char) each)).collect(Collectors.joining());
+    boolean plain =
+        body.equals(value) && !value.isEmpty() && value.indexOf(' ') < 0 && value.indexOf('=') < 0;
+    return plain ? value : '"' + body + '"';
+  }
+
+  /** Whether a viewer may start a new line at {@code each}: a control or Unicode line break. */
+  private static boolean breaksLine(int each) {
+    return Character.isISOControl(each) || each == 0x2028 || each == 0x2029;
+  }
+
+  /** The text for one character inside quotes, so no value ever ends its line or its quotes. */
+  private static String escaped(char each) {
+    String known = ESCAPES.get(each);
+    if (known != null) {
+      return known;
+    }
+    return breaksLine(each) ? String.format("\\u%04x", (int) each) : String.valueOf(each);
   }
 
   private static Map<Level, Logger.Level> levels() {
