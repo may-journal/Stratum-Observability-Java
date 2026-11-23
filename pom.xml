@@ -23,6 +23,7 @@
   <modules>
     <module>stratum-core</module>
     <module>stratum-log</module>
+    <module>stratum-jfr</module>
     <module>stratum-otel-parent</module>
     <module>stratum-otel-logs</module>
     <module>stratum-otel-metrics</module>
