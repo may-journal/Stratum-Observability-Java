@@ -140,7 +140,7 @@ Numbers on classes and letters on relationships match the callout table.
 | C   | A catalog maps each key to its event. | One entry per key. |
 | D   | An event has one level. | Plugins read it to filter and to map. |
 | E   | Publishing builds one snapshot. | Listeners and plugins share it. |
-| F   | The engine hands the snapshot to each plugin that accepts its type and whose `shouldPublish` returns true. | A plugin can take only some events. |
+| F   | The engine hands the snapshot to each plugin that accepts its type and whose `shouldPublish` returns true. A plugin that throws is logged, and the rest still run. | A plugin can take only some events, and one failure stays its own. |
 | G   | A plugin receives snapshots. | It never sees the engine's state. |
 | H   | An event has the type that decides the plugins it reaches. | An empty accepted list takes every type. |
 | I   | An event may carry settings for its type. | Settings for another type fail when the catalog is added. |

@@ -148,7 +148,7 @@ public final class Stratum {
   /**
    * Publishes the event under {@code key} with {@code fields}, such as {@code
    * entry(NoteField.WORDS, "120")}; a field it does not name is left out. Returns whether a catalog
-   * held the key.
+   * held the key, even when a listener or plugin throws, as {@link Delivery} logs that and goes on.
    */
   @SafeVarargs
   public final boolean publish(CatalogKey key, Map.Entry<CatalogField, String>... fields) {
@@ -173,11 +173,8 @@ public final class Stratum {
       heard = List.copyOf(listeners);
       targets = List.copyOf(plugins);
     }
-    heard.forEach(listener -> listener.accept(snapshot));
-    targets.stream()
-        .filter(plugin -> Event.reaches(snapshot.eventType(), plugin.acceptedTypes()))
-        .filter(plugin -> plugin.shouldPublish(snapshot))
-        .forEach(plugin -> plugin.publish(snapshot));
+    heard.forEach(listener -> Delivery.toListener(listener, snapshot));
+    targets.forEach(plugin -> Delivery.toPlugin(plugin, snapshot));
     return true;
   }
 

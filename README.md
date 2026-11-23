@@ -169,6 +169,7 @@ public final class ConsolePlugin implements Plugin {
 - `acceptedTypes()` lists the event types the plugin takes. An empty set, the default, takes every event.
 - Types match by name, so two modules may each define a type with the same name and both receive its events.
 - `shouldPublish(snapshot)` filters further, such as on level, or while the destination is unavailable.
+- A plugin or listener that throws is logged as a warning on the `stratum` logger. The others still receive the event.
 - `check(key, event)` can refuse a bad catalog entry with `CatalogException` when its catalog or the plugin is added.
 
 ### Event types and settings
