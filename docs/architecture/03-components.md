@@ -15,7 +15,7 @@ C4Component
     Container_Boundary(core, "3 stratum-core (stratum-core/src/main/java/stratum)") {
         Component(service, "4 Service", "Java", "stratum-core/src/main/java/stratum/Stratum.java, stratum-core/src/main/java/stratum/Delivery.java")
         Component(catalog, "5 Catalog", "Java", "stratum-core/src/main/java/stratum/Catalog.java, stratum-core/src/main/java/stratum/CatalogException.java, stratum-core/src/main/java/stratum/Event.java, stratum-core/src/main/java/stratum/Level.java, stratum-core/src/main/java/stratum/EventType.java, stratum-core/src/main/java/stratum/EventSettings.java, stratum-core/src/main/java/stratum/CatalogKey.java, stratum-core/src/main/java/stratum/CatalogField.java, stratum-core/src/main/java/stratum/BaseType.java")
-        Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/stratum/Snapshot.java, stratum-core/src/main/java/stratum/Plugin.java")
+        Component(snapshot, "6 Snapshot and Plugin", "Java", "stratum-core/src/main/java/stratum/Snapshot.java, stratum-core/src/main/java/stratum/Plugin.java, stratum-core/src/main/java/stratum/Listening.java")
     }
 
     Container_Boundary(logs, "7 stratum-otel-logs (stratum-otel-logs/src/main/java/stratum/otel/logs)") {
@@ -85,7 +85,7 @@ Numbers on nodes and letters on arrows match the callout table.
 | 3   | The core module, from `stratum-core/src/main/java`. | Catalogs, context and publishing, with no plugin of its own. |
 | 4   | `Stratum` holds catalogs, plugins, context and listeners behind one lock, and publishes. `Delivery` hands each snapshot over and logs a plugin or listener that throws. | Safe to call from any thread, and one failure stays its own. |
 | 5   | `Catalog`, `CatalogException`, `Event`, `Level`, `EventType`, `EventSettings`, `CatalogKey`, `CatalogField` and `BaseType`. | Each catalog entry names its type, description, id, level, fields and settings. |
-| 6   | `Snapshot` and the `Plugin` interface, with the types each plugin accepts. | Every plugin and listener reads one frozen value. |
+| 6   | `Snapshot` and the `Plugin` interface, with the types each plugin accepts, and the `Listening` handle that removes a listener. | Every plugin and listener reads one frozen value. |
 | 7   | The OpenTelemetry logs module, from `stratum-otel-logs/src/main/java`. | Only apps that run OpenTelemetry pull in its API. |
 | 8   | `OpenTelemetryLogsPlugin` accepts the `LOG` event type and emits each such snapshot as a log record, with private fields hidden. | Events join the pipeline the app already runs. |
 | 9   | The `LoggerProvider` the app passes in, with the exporter it chose. | The plugin owns no endpoint of its own. |

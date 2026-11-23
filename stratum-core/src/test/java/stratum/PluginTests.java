@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -67,5 +68,26 @@ class PluginTests {
     assertEquals(Level.WARNING, records.get(0).getLevel());
     assertEquals("plugin crashes failed on note.saved", records.get(0).getMessage());
     assertInstanceOf(IllegalStateException.class, records.get(0).getThrown());
+  }
+
+  @Test
+  void test0003_7() {
+    Recorder recorder = new Recorder();
+    Stratum stratum = NotesEngine.start(recorder);
+    stratum.publish(NoteKey.SAVED);
+    stratum.removePlugin("recorder");
+    stratum.publish(NoteKey.FAILED);
+    assertEquals(List.of("note.saved"), recorder.keys());
+  }
+
+  @Test
+  void test0003_8() {
+    List<String> heard = new ArrayList<>();
+    Stratum stratum = NotesEngine.start();
+    Listening listening = stratum.addListener(snapshot -> heard.add(snapshot.key()));
+    stratum.publish(NoteKey.SAVED);
+    listening.close();
+    stratum.publish(NoteKey.FAILED);
+    assertEquals(List.of("note.saved"), heard);
   }
 }

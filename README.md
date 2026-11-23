@@ -136,7 +136,7 @@ NotesStratum.STRATUM.publish(NoteKey.SAVED, entry(NoteField.WORDS, "120"), entry
 
 ## Creating a custom plugin
 
-A plugin is any class that implements `Plugin`. Adding a second plugin with the same name replaces the first.
+A plugin is any class that implements `Plugin`. Adding a second plugin with the same name replaces the first. `removePlugin(name)` switches one off.
 
 ### ConsolePlugin.java
 
@@ -170,6 +170,7 @@ public final class ConsolePlugin implements Plugin {
 - Types match by name, so two modules may each define a type with the same name and both receive its events.
 - `shouldPublish(snapshot)` filters further, such as on level, or while the destination is unavailable.
 - A plugin or listener that throws is logged as a warning on the `stratum` logger. The others still receive the event.
+- `addListener` calls a listener with every snapshot, and closing the `Listening` handle it returns removes the listener.
 - `check(key, event)` can refuse a bad catalog entry with `CatalogException` when its catalog or the plugin is added.
 
 ### Event types and settings

@@ -38,3 +38,11 @@ plugins
     - Given Developer has a plugin that fails
         - When I publish an event
             - Then the stratum logger holds one warning that names the plugin and the key
+- 0003.7
+    - Given Developer removes a plugin by its name
+        - When I publish an event
+            - Then that plugin receives nothing more
+- 0003.8
+    - Given Developer closes the handle a listener was added with
+        - When I publish an event
+            - Then that listener hears nothing more

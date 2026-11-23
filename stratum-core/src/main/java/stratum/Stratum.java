@@ -50,30 +50,9 @@ public final class Stratum {
       others.remove(catalog.name());
       Map<String, String> keys = new HashMap<>();
       Map<Integer, String> ids = new HashMap<>();
-      others.forEach(
-          (name, other) ->
-              other.items().forEach((key, event) -> claim(keys, ids, key, event, name)));
-      for (Map.Entry<CatalogKey, Event> item : catalog.sorted()) {
-        claim(keys, ids, item.getKey(), item.getValue(), catalog.name());
-      }
+      others.values().forEach(other -> other.claim(keys, ids));
+      catalog.claim(keys, ids);
       catalogs.put(catalog.name(), catalog);
-    }
-  }
-
-  /** Records that {@code catalog} holds {@code key} and its event's id, or throws for a clash. */
-  private static void claim(
-      Map<String, String> keys,
-      Map<Integer, String> ids,
-      CatalogKey key,
-      Event event,
-      String catalog) {
-    String owner = keys.putIfAbsent(key.key(), catalog);
-    if (owner != null) {
-      throw CatalogException.duplicateKey(key, owner);
-    }
-    String other = ids.putIfAbsent(event.id(), key.key());
-    if (other != null) {
-      throw CatalogException.duplicateId(key, event.id(), other);
     }
   }
 
@@ -124,6 +103,13 @@ public final class Stratum {
     }
   }
 
+  /** Removes the plugin named {@code name}, so it receives no later event. */
+  public void removePlugin(String name) {
+    synchronized (lock) {
+      plugins.removeIf(other -> other.name().equals(name));
+    }
+  }
+
   /** Sets a context value every later snapshot carries, such as {@code entry(SCREEN, "Today")}. */
   public void setContext(Map.Entry<CatalogField, String> value) {
     synchronized (lock) {
@@ -138,11 +124,16 @@ public final class Stratum {
     }
   }
 
-  /** Calls {@code listener} with every snapshot this engine publishes. */
-  public void addListener(Consumer<Snapshot> listener) {
+  /** Calls {@code listener} with every snapshot this engine publishes, until the handle closes. */
+  public Listening addListener(Consumer<Snapshot> listener) {
     synchronized (lock) {
       listeners.add(listener);
     }
+    return () -> {
+      synchronized (lock) {
+        listeners.remove(listener);
+      }
+    };
   }
 
   /**
