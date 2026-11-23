@@ -90,4 +90,12 @@ class PluginTests {
     stratum.publish(NoteKey.FAILED);
     assertEquals(List.of("note.saved"), heard);
   }
+
+  @Test
+  void test0003_9() {
+    Recorder recorder = new Recorder();
+    Stratum stratum = NotesEngine.start(new Broken(), recorder);
+    Warnings.failingDuring(() -> assertTrue(stratum.publish(NoteKey.SAVED)));
+    assertEquals(List.of("note.saved"), recorder.keys());
+  }
 }

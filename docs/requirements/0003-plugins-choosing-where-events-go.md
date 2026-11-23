@@ -46,3 +46,8 @@ plugins
    1. GIVEN Developer closes the handle a listener was added with
       1. WHEN I publish an event
          1. THEN that listener hears nothing more
+9. Survives a failing plugin and a failing logger
+   1. GIVEN Developer has a plugin that fails
+   2. GIVEN a logger that fails too
+      1. WHEN I publish an event
+         1. THEN my other plugins still receive it
