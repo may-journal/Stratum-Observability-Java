@@ -119,4 +119,11 @@ class OpenTelemetryLogsTests {
     start(app.plugin()).publish(NotebookKey.OPENED, entry(NotebookField.SOURCE, "search"));
     assertTrue(app.records().isEmpty());
   }
+
+  @Test
+  void test0004_8() {
+    LogRecordData record = record(stratum -> stratum.publish(NotebookKey.SAVED));
+    assertEquals("Notes", attribute(record, "stratum.catalog"));
+    assertEquals("1.0", attribute(record, "stratum.catalog.version"));
+  }
 }

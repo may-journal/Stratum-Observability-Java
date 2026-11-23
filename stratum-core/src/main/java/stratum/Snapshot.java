@@ -6,7 +6,8 @@ import java.util.Optional;
 
 /**
  * One published event, frozen when the app published it, so a later change to the context never
- * reaches it. It holds the catalog's values, the field values the app passed, and the context.
+ * reaches it. It holds the event's values, the fields the app passed, the context, and the name and
+ * version of its catalog.
  */
 public record Snapshot(
     String key,
@@ -20,7 +21,9 @@ public record Snapshot(
     Map<String, String> context,
     Instant time,
     String product,
-    String version) {
+    String version,
+    String catalog,
+    String catalogVersion) {
 
   /** Copies the maps, so the snapshot stays frozen. */
   public Snapshot {

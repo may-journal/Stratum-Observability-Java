@@ -18,7 +18,7 @@ import stratum.Snapshot;
 /**
  * Emits each {@link OpenTelemetryLogType#LOG} snapshot as a log record through the app's {@link
  * LoggerProvider}, which alone decides where records go. The body is the description, and
- * attributes carry the key, id, product, version, context and fields, with private values shown as
+ * attributes carry the key, id, product, catalog, context and fields, with private values shown as
  * {@value #PRIVATE}.
  */
 public final class OpenTelemetryLogsPlugin implements Plugin {
@@ -40,6 +40,13 @@ public final class OpenTelemetryLogsPlugin implements Plugin {
 
   /** The product's version, as the service was started with it. */
   public static final AttributeKey<String> VERSION = AttributeKey.stringKey("stratum.version");
+
+  /** The catalog that holds the event. */
+  public static final AttributeKey<String> CATALOG = AttributeKey.stringKey("stratum.catalog");
+
+  /** The version of the catalog that holds the event. */
+  public static final AttributeKey<String> CATALOG_VERSION =
+      AttributeKey.stringKey("stratum.catalog.version");
 
   /**
    * The OpenTelemetry severity for each event level, following the specification's syslog mapping:
@@ -101,7 +108,9 @@ public final class OpenTelemetryLogsPlugin implements Plugin {
             .put(KEY, snapshot.key())
             .put(ID, (long) snapshot.id())
             .put(PRODUCT, snapshot.product())
-            .put(VERSION, snapshot.version());
+            .put(VERSION, snapshot.version())
+            .put(CATALOG, snapshot.catalog())
+            .put(CATALOG_VERSION, snapshot.catalogVersion());
     snapshot.context().forEach(builder::put);
     snapshot.publicFields().forEach(builder::put);
     snapshot.privateFields().keySet().forEach(name -> builder.put(name, PRIVATE));
