@@ -15,7 +15,7 @@ import stratum.Snapshot;
 /**
  * Writes each {@link LogType#LOG} snapshot as one line through {@link System.Logger}, named for the
  * product, at the event's level. The line is the key, then context and public fields as {@code
- * name=value} pairs, quoted where needed, with private values shown as {@value #PRIVATE}.
+ * name=value} pairs, with private values shown as {@value #PRIVATE}.
  */
 public final class LogPlugin implements Plugin {
 
