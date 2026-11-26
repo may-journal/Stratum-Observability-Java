@@ -14,23 +14,23 @@ catalogs with bad metric settings
 
 ## Requirements
 
-- 0009.1
-    - Given Developer has an event with the metric type and no metric settings
-        - When I add its catalog beside the metrics plugin
-            - Then adding fails and names the event
-- 0009.2
-    - Given Developer has a histogram with no value field
-        - When I add its catalog beside the metrics plugin
-            - Then adding fails and names the metric
-- 0009.3
-    - Given Developer has a metric whose value is a private field
-        - When I add its catalog beside the metrics plugin
-            - Then adding fails and names the field
-- 0009.4
-    - Given Developer has a metric attribute that is a private field
-        - When I add its catalog beside the metrics plugin
-            - Then adding fails and names the field
-- 0009.5
-    - Given Developer has a metric attribute the event does not name
-        - When I add its catalog beside the metrics plugin
-            - Then adding fails and names the field
+1. Refuses missing metric settings
+   1. GIVEN Developer has an event with the metric type and no metric settings
+      1. WHEN I add its catalog beside the metrics plugin
+         1. THEN adding fails and names the event
+2. Refuses a histogram without a value
+   1. GIVEN Developer has a histogram with no value field
+      1. WHEN I add its catalog beside the metrics plugin
+         1. THEN adding fails and names the metric
+3. Refuses a private value
+   1. GIVEN Developer has a metric whose value is a private field
+      1. WHEN I add its catalog beside the metrics plugin
+         1. THEN adding fails and names the field
+4. Refuses a private attribute
+   1. GIVEN Developer has a metric attribute that is a private field
+      1. WHEN I add its catalog beside the metrics plugin
+         1. THEN adding fails and names the field
+5. Refuses an unnamed attribute
+   1. GIVEN Developer has a metric attribute the event does not name
+      1. WHEN I add its catalog beside the metrics plugin
+         1. THEN adding fails and names the field

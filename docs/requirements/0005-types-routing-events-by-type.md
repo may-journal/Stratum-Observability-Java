@@ -16,15 +16,15 @@ published events
 
 ## Requirements
 
-- 0005.1
-    - Given Developer has an event with a type and settings
-        - When I publish it to a plugin that accepts every event
-            - Then that plugin receives the type and the settings
-- 0005.2
-    - Given Developer has a plugin that accepts one type
-        - When I publish an event with that type and an event with another
-            - Then that plugin receives only the event with its type
-- 0005.3
-    - Given Developer has a plugin accepting another type of the same name
-        - When I publish an event of that type
-            - Then that plugin receives it
+1. Passes the type and settings
+   1. GIVEN Developer has an event with a type and settings
+      1. WHEN I publish it to a plugin that accepts every event
+         1. THEN that plugin receives the type and the settings
+2. Filters by type
+   1. GIVEN Developer has a plugin that accepts one type
+      1. WHEN I publish an event with that type and an event with another
+         1. THEN that plugin receives only the event with its type
+3. Matches a type by name
+   1. GIVEN Developer has a plugin accepting another type of the same name
+      1. WHEN I publish an event of that type
+         1. THEN that plugin receives it

@@ -16,19 +16,19 @@ catalogs with a bad setting
 
 ## Requirements
 
-- 0008.1
-    - Given Developer has an event the plugin refuses for missing settings
-        - When I add that plugin after start
-            - Then adding fails and names the event
-- 0008.2
-    - Given Developer has settings naming a private field the plugin needs public
-        - When I add that catalog to a service with the plugin
-            - Then adding fails and names the field
-- 0008.3
-    - Given Developer has a plugin that needs settings
-        - When I add an event of another type without them
-            - Then adding succeeds and the plugin never receives it
-- 0008.4
-    - Given Developer has settings for a type the event does not have
-        - When I add its catalog
-            - Then adding fails and names both types
+1. Refuses missing settings
+   1. GIVEN Developer has an event the plugin refuses for missing settings
+      1. WHEN I add that plugin after start
+         1. THEN adding fails and names the event
+2. Refuses a private settings field
+   1. GIVEN Developer has settings naming a private field the plugin needs public
+      1. WHEN I add that catalog to a service with the plugin
+         1. THEN adding fails and names the field
+3. Ignores another type
+   1. GIVEN Developer has a plugin that needs settings
+      1. WHEN I add an event of another type without them
+         1. THEN adding succeeds and the plugin never receives it
+4. Refuses settings for another type
+   1. GIVEN Developer has settings for a type the event does not have
+      1. WHEN I add its catalog
+         1. THEN adding fails and names both types
