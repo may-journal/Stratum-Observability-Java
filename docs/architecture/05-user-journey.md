@@ -35,7 +35,7 @@ flowchart TB
     plugins(3 Choose plugins<br/>Req 0003, 0005):::action
     publish(4 The app publishes<br/>Req 0001, 0002):::action
     snapshot[(5 Event frozen with context<br/>Req 0002, 0005)]:::system
-    plugin[6 Event at the plugin<br/>Req 0003, 0004, 0006, 0007, 0010]:::screen
+    plugin[6 Event at the plugin<br/>Req 0003, 0004, 0006, 0007, 0010, 0011]:::screen
 
     dev --> catalog
     catalog --> plugins
