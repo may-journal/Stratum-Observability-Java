@@ -25,7 +25,8 @@ published events
       1. WHEN I publish with that field
          1. THEN the event leaves that field out
 3. Names the product
-   1. GIVEN Developer started the service for a product and version
+   1. GIVEN Developer started the service for a product
+   2. GIVEN Developer gave the service a version
       1. WHEN I publish through it
          1. THEN the event names both
 4. Reaches a listener
@@ -37,10 +38,14 @@ published events
       1. WHEN I publish after clearing it
          1. THEN the event leaves that value out
 6. Carries an id and level
-   1. GIVEN Developer gave an event an id and a level
+   1. GIVEN Developer gave an event an id
+   2. GIVEN Developer gave that event a level
       1. WHEN I publish the event
-         1. THEN it carries that id and level
+         1. THEN it carries that id
+         2. THEN it carries that level
 7. Names its catalog
-   1. GIVEN Developer named the catalog and gave it a version
+   1. GIVEN Developer named the catalog
+   2. GIVEN Developer gave that catalog a version
       1. WHEN I publish an event that catalog holds
-         1. THEN the event names that catalog and its version
+         1. THEN the event names that catalog
+         2. THEN the event names that catalog's version

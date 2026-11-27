@@ -19,16 +19,20 @@ catalogs with a bad setting
 1. Refuses missing settings
    1. GIVEN Developer has an event the plugin refuses for missing settings
       1. WHEN I add that plugin after start
-         1. THEN adding fails and names the event
+         1. THEN adding fails
+         2. THEN it names the event
 2. Refuses a private settings field
    1. GIVEN Developer has settings naming a private field the plugin needs public
       1. WHEN I add that catalog to a service with the plugin
-         1. THEN adding fails and names the field
+         1. THEN adding fails
+         2. THEN it names the field
 3. Ignores another type
    1. GIVEN Developer has a plugin that needs settings
       1. WHEN I add an event of another type without them
-         1. THEN adding succeeds and the plugin never receives it
+         1. THEN adding succeeds
+         2. THEN the plugin never receives it
 4. Refuses settings for another type
    1. GIVEN Developer has settings for a type the event does not have
       1. WHEN I add its catalog
-         1. THEN adding fails and names both types
+         1. THEN adding fails
+         2. THEN it names both types
