@@ -35,15 +35,19 @@ published keys
 5. Refuses a repeated key
    1. GIVEN Developer has a key whose text another catalog holds
       1. WHEN I add the catalog
-         1. THEN adding fails and names the other catalog
+         1. THEN adding fails
+         2. THEN it names the other catalog
 6. Refuses a repeated id
    1. GIVEN Developer has an id another event holds
       1. WHEN I add its catalog
-         1. THEN adding fails and names the other event
+         1. THEN adding fails
+         2. THEN it names the other event
 7. Refuses a shared field
-   1. GIVEN Developer has a field that is both public and private
+   1. GIVEN Developer has a field that is public
+   2. GIVEN Developer made that same field private
       1. WHEN I add the catalog with it
-         1. THEN adding fails and names the field
+         1. THEN adding fails
+         2. THEN it names the field
 8. Refuses text for a constant
    1. GIVEN Developer writes app code that publishes a key or a field as text
       1. WHEN I compile the app

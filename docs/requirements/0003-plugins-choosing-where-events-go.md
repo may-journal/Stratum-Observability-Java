@@ -37,7 +37,9 @@ plugins
 6. Warns about a failing plugin
    1. GIVEN Developer has a plugin that fails
       1. WHEN I publish an event
-         1. THEN the stratum logger holds one warning that names the plugin and the key
+         1. THEN the stratum logger holds one warning
+         2. THEN the warning names the plugin
+         3. THEN the warning names the key
 7. Removes a plugin by name
    1. GIVEN Developer removes a plugin by its name
       1. WHEN I publish an event

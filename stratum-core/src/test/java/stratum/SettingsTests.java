@@ -2,6 +2,7 @@ package stratum;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ class SettingsTests {
     CatalogException refused =
         assertThrows(CatalogException.class, () -> stratum.add(new Counter()));
     assertEquals("event note.shared is invalid: it has no count settings", refused.getMessage());
+    assertTrue(refused.getMessage().contains("note.shared"));
   }
 
   @Test
@@ -38,6 +40,7 @@ class SettingsTests {
     CatalogException refused = assertThrows(CatalogException.class, () -> stratum.add(bad));
     assertEquals(
         "event note.shared is invalid: count field message is not public", refused.getMessage());
+    assertTrue(refused.getMessage().contains("field message "));
   }
 
   @Test
@@ -45,7 +48,7 @@ class SettingsTests {
     Counter counter = new Counter();
     Stratum stratum = NotesEngine.start(counter);
     stratum.add(SharingCatalog.CATALOG);
-    stratum.publish(ShareKey.SHARED);
+    assertTrue(stratum.publish(ShareKey.SHARED));
     assertEquals(List.of(), counter.keys());
   }
 
@@ -62,5 +65,7 @@ class SettingsTests {
     assertEquals(
         "event note.shared is invalid: it has settings for type COUNT but is of type BASE",
         refused.getMessage());
+    assertTrue(refused.getMessage().contains("COUNT"));
+    assertTrue(refused.getMessage().contains("BASE"));
   }
 }

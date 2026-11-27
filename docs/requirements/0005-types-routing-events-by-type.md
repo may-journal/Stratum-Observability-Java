@@ -17,12 +17,14 @@ published events
 ## Requirements
 
 1. Passes the type and settings
-   1. GIVEN Developer has an event with a type and settings
+   1. GIVEN Developer has an event with a type
+   2. GIVEN Developer gave that event settings
       1. WHEN I publish it to a plugin that accepts every event
-         1. THEN that plugin receives the type and the settings
+         1. THEN that plugin receives the type
+         2. THEN that plugin receives the settings
 2. Filters by type
    1. GIVEN Developer has a plugin that accepts one type
-      1. WHEN I publish an event with that type and an event with another
+      1. WHEN I publish one event of each of two types
          1. THEN that plugin receives only the event with its type
 3. Matches a type by name
    1. GIVEN Developer has a plugin accepting another type of the same name

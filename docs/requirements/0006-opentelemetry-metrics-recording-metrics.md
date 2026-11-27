@@ -25,7 +25,10 @@ events with the metric type published through the OpenTelemetry metrics plugin
 3. Records a histogram
    1. GIVEN Developer has a histogram event
       1. WHEN a sync takes 420 ms
-         1. THEN my reader holds one histogram value with the catalog's unit and description and attribute
+         1. THEN my reader holds one histogram value
+         2. THEN the value has the catalog's unit
+         3. THEN the value has the catalog's description
+         4. THEN the value has the attribute
 4. Keeps the latest gauge
    1. GIVEN Developer has a gauge event
       1. WHEN the app counts the notes twice
@@ -33,7 +36,8 @@ events with the metric type published through the OpenTelemetry metrics plugin
 5. Skips a bad value
    1. GIVEN Developer passes a value that is missing or not a number
       1. WHEN the app publishes it
-         1. THEN publishing succeeds and my reader holds nothing
+         1. THEN publishing succeeds
+         2. THEN my reader holds nothing
 6. Skips a log only event
    1. GIVEN Developer has an event with only the log type
       1. WHEN the app saves a note

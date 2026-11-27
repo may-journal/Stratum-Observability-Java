@@ -64,9 +64,14 @@ class JfrTests {
     RecordedEvent event = event(stratum -> stratum.publish(FlightKey.SAVED));
     assertEquals("note.saved", event.getString("key"));
     assertEquals(1, event.getInt("id"));
+  }
+
+  @Test
+  void test0010_8() throws IOException {
+    RecordedEvent event = event(stratum -> stratum.publish(FlightKey.SAVED));
     assertEquals("A person saved a note", event.getString("description"));
-    assertEquals(
-        List.of("Notes", "2.1"), List.of(event.getString("product"), event.getString("version")));
+    assertEquals("Notes", event.getString("product"));
+    assertEquals("2.1", event.getString("version"));
   }
 
   @Test

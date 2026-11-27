@@ -2,6 +2,7 @@ package stratum.otel.metrics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.opentelemetry.api.metrics.MeterProvider;
 import java.util.Map;
@@ -40,6 +41,7 @@ class MetricSettingsTests {
     assertEquals(
         "event note.shared is invalid: it has the METRIC type but no metric settings",
         refusal(null));
+    assertTrue(refusal(null).contains("note.shared"));
   }
 
   @Test
@@ -49,6 +51,7 @@ class MetricSettingsTests {
             MetricKind.HISTOGRAM, "notes.shares", "{share}", "Shares", null, Set.of());
     assertEquals(
         "event note.shared is invalid: metric notes.shares needs a value field", refusal(shares));
+    assertTrue(refusal(shares).contains("notes.shares"));
   }
 
   @Test
@@ -59,6 +62,7 @@ class MetricSettingsTests {
     assertEquals(
         "event note.shared is invalid: metric value field message is not a public field",
         refusal(length));
+    assertTrue(refusal(length).contains("field message "));
   }
 
   @Test
@@ -69,6 +73,7 @@ class MetricSettingsTests {
     assertEquals(
         "event note.shared is invalid: metric attribute message is not a public field",
         refusal(shares));
+    assertTrue(refusal(shares).contains("attribute message "));
   }
 
   @Test
@@ -84,5 +89,6 @@ class MetricSettingsTests {
     assertEquals(
         "event note.shared is invalid: metric attribute notes is not a public field",
         refusal(shares));
+    assertTrue(refusal(shares).contains("attribute notes "));
   }
 }

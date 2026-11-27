@@ -67,6 +67,8 @@ class PluginTests {
     assertEquals(1, records.size());
     assertEquals(Level.WARNING, records.get(0).getLevel());
     assertEquals("plugin crashes failed on note.saved", records.get(0).getMessage());
+    assertTrue(records.get(0).getMessage().contains("crashes"));
+    assertTrue(records.get(0).getMessage().contains("note.saved"));
     assertInstanceOf(IllegalStateException.class, records.get(0).getThrown());
   }
 

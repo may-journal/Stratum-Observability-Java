@@ -12,7 +12,6 @@ import io.opentelemetry.sdk.metrics.data.HistogramPointData;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import io.opentelemetry.sdk.testing.exporter.InMemoryMetricReader;
 import java.util.Collection;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import stratum.Plugin;
 import stratum.Stratum;
@@ -79,7 +78,8 @@ class OpenTelemetryMetricsTests {
             entry(NotebookField.KIND, "full"));
     MetricData metric = app.only("notes.sync.duration");
     HistogramPointData point = metric.getHistogramData().getPoints().iterator().next();
-    assertEquals(List.of(1L, 420.0), List.of(point.getCount(), point.getSum()));
+    assertEquals(1L, point.getCount());
+    assertEquals(420.0, point.getSum());
     assertEquals(Attributes.of(AttributeKey.stringKey("kind"), "full"), point.getAttributes());
     assertEquals("ms", metric.getUnit());
     assertEquals("How long a sync took", metric.getDescription());

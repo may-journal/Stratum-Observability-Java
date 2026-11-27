@@ -25,15 +25,18 @@ events with the log type published through the log plugin
 3. Shows a public value
    1. GIVEN Developer passes a value for a public field
       1. WHEN a person saves 120 words
-         1. THEN the line shows the field and its value
+         1. THEN the line shows the field
+         2. THEN the line shows its value
 4. Hides a private value
    1. GIVEN Developer passes a value for a private field
       1. WHEN a person saves a titled note
-         1. THEN the line names the field but hides its value
+         1. THEN the line names the field
+         2. THEN the line hides its value
 5. Orders context and fields
    1. GIVEN Developer has set a value for a context field
       1. WHEN a person saves from the Today screen
-         1. THEN the line shows the context and fields in name order
+         1. THEN the line shows the context in name order
+         2. THEN the line shows the fields in name order
 6. Skips another type
    1. GIVEN Developer has an event without the log type
       1. WHEN a person opens a note by search
