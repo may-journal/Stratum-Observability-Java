@@ -39,7 +39,8 @@ class SnapshotTests {
     Recorder recorder = new Recorder();
     NotesEngine.start(recorder).publish(NoteKey.SAVED);
     Snapshot snapshot = recorder.snapshots().get(0);
-    assertEquals(List.of("Notes", "2.1"), List.of(snapshot.product(), snapshot.version()));
+    assertEquals("Notes", snapshot.product());
+    assertEquals("2.1", snapshot.version());
   }
 
   @Test
@@ -75,6 +76,7 @@ class SnapshotTests {
     Recorder recorder = new Recorder();
     NotesEngine.start(recorder).publish(NoteKey.SAVED);
     Snapshot snapshot = recorder.snapshots().get(0);
-    assertEquals(List.of("Notes", "1.0"), List.of(snapshot.catalog(), snapshot.catalogVersion()));
+    assertEquals("Notes", snapshot.catalog());
+    assertEquals("1.0", snapshot.catalogVersion());
   }
 }

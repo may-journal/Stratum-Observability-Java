@@ -18,6 +18,7 @@ class TypeTests {
     assertEquals(CountType.COUNT, snapshot.eventType());
     assertEquals(
         Optional.of(new CountSettings(NoteField.MILLIS)), snapshot.settings(CountSettings.class));
+    assertEquals(List.of("sync.finished"), recorder.keys());
   }
 
   @Test

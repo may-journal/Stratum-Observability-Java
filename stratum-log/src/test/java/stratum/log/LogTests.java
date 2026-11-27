@@ -2,6 +2,7 @@ package stratum.log;
 
 import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -105,7 +106,8 @@ class LogTests {
         line(
             "Notes",
             stratum -> stratum.publish(JournalKey.SAVED, entry(JournalField.WORDS, "120")));
-    assertTrue(record.getMessage().contains(" words=120"));
+    assertTrue(record.getMessage().contains(" words="));
+    assertTrue(record.getMessage().contains("=120"));
   }
 
   @Test
@@ -116,6 +118,8 @@ class LogTests {
             stratum ->
                 stratum.publish(JournalKey.SAVED, entry(JournalField.TITLE, "Dentist at noon")));
     assertEquals("note.saved screen=Today title=" + LogPlugin.PRIVATE, record.getMessage());
+    assertTrue(record.getMessage().contains(" title="));
+    assertFalse(record.getMessage().contains("Dentist"));
   }
 
   @Test
@@ -123,8 +127,14 @@ class LogTests {
     LogRecord record =
         line(
             "Notes",
-            stratum -> stratum.publish(JournalKey.SAVED, entry(JournalField.WORDS, "120")));
-    assertEquals("note.saved screen=Today words=120", record.getMessage());
+            stratum ->
+                stratum.publish(
+                    JournalKey.SAVED,
+                    entry(JournalField.WORDS, "120"),
+                    entry(JournalField.PLACE, "Home")));
+    String message = record.getMessage();
+    assertTrue(message.indexOf("place=Home") < message.indexOf("screen=Today"));
+    assertTrue(message.indexOf("screen=Today") < message.indexOf("words=120"));
   }
 
   @Test

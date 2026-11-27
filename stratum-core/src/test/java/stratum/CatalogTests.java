@@ -57,6 +57,7 @@ class CatalogTests {
             "Drafts", "1.0", Map.of(ShareKey.DRAFT_SAVED, Event.of(BaseType.BASE, "Saved", 20)));
     CatalogException refused = assertThrows(CatalogException.class, () -> stratum.add(drafts));
     assertEquals("event note.saved is already in Notes", refused.getMessage());
+    assertTrue(refused.getMessage().contains("Notes"));
   }
 
   @Test
@@ -68,6 +69,7 @@ class CatalogTests {
     CatalogException refused = assertThrows(CatalogException.class, () -> stratum.add(sharing));
     assertEquals("note.shared", refused.key());
     assertEquals("event note.shared has id 1, which note.saved has", refused.getMessage());
+    assertTrue(refused.getMessage().contains("note.saved"));
   }
 
   @Test
@@ -81,6 +83,7 @@ class CatalogTests {
     CatalogException refused = assertThrows(CatalogException.class, () -> stratum.add(sharing));
     assertEquals(
         "event note.shared is invalid: field to is both public and private", refused.getMessage());
+    assertTrue(refused.getMessage().contains("field to "));
   }
 
   @Test

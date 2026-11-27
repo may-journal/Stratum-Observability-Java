@@ -88,6 +88,7 @@ class OpenTelemetryLogsTests {
         record(
             stratum ->
                 stratum.publish(NotebookKey.SAVED, entry(NotebookField.TITLE, "Dentist at noon")));
+    assertTrue(record.getAttributes().asMap().containsKey(AttributeKey.stringKey("title")));
     assertEquals(OpenTelemetryLogsPlugin.PRIVATE, attribute(record, "title"));
     assertFalse(record.toString().contains("Dentist"));
   }
